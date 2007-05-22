@@ -122,9 +122,11 @@ class CMessageRTDTrades extends CMessageRTD
 	{
 		$contractId = $this->aTrade["fid_contract_id"];
 		$contractType = $this->oRequestRTD->oContracts->GetContractType($contractId);
+				print "*";
 		switch($contractType)
 		{
 			case 1:
+        print "&";   			  
 				$this->InsertContractType1();
 				break;
 			default:
@@ -135,15 +137,15 @@ class CMessageRTDTrades extends CMessageRTD
 
 	private function InsertContractType1()
 	{
-		// if manual trade then ignore it
-		if ($this->aTrade["fid_trade_flags"] == 128 || $this->aTrade["fid_trade_flags"] == 129 ||	$this->aTrade["fid_trade_flags"] == 130)
-		{
-			wlog(get_class($this), "I Manual Trade Found : " . $trade["fid_trade_id"] . " (Ignoring)");
-			break;
-		}
-
 		if(isset($this->oRequestRTD->aaSettings["ML"]))
 		{
+  		// if manual trade then ignore it
+  		if ($this->aTrade["fid_trade_flags"] == 128 || $this->aTrade["fid_trade_flags"] == 129 ||	$this->aTrade["fid_trade_flags"] == 130)
+  		{
+  			wlog(get_class($this), "I Manual Trade Found : " . $trade["fid_trade_id"] . " (Ignoring)");
+  			break;
+  		}
+		
 			/* PROCESS FOR ML */
 			// default - new trade
 			$data["action"] = "N";
@@ -212,25 +214,38 @@ class CMessageRTDTrades extends CMessageRTD
 			// send trade to the database
 			//$this->oRequestRTD->oDatabase->InsertQuery($this->oRequestRTD->aaSettings["TRADE"]["TRADE_TABLE"], $data);
 
+			unset($data);
+		}
 
-			$aUrl[] = "t=" . urlencode($data["tradeDateTime"]);
-			$aUrl[] = "e=" . urlencode($data["exchange"]);
-			$aUrl[] = "i=" . urlencode($data["isin"]);
-			$aUrl[] = "s=" . urlencode($data["symbol"]);
-			$aUrl[] = "c=" . urlencode($data["currency"]);
-			$aUrl[] = "q=" . urlencode($data["quantity"]);
-			$aUrl[] = "p=" . urlencode($data["price"]);
-			$aUrl[] = "acc=" . urlencode($data["account"]);
-			$aUrl[] = "agg=" . urlencode($data["aggressor"]);
-			$aUrl[] = "eoi=" . urlencode($data["exchangeOrderId"]);
-			$aUrl[] = "eti=" . urlencode($data["exchangeTradeId"]);
-			$aUrl[] = "ioi=" . urlencode($data["internalOrderId"]);
-			$aUrl[] = "iti=" . urlencode($data["internalTradeId"]);
-			$aUrl[] = "is=" . urlencode($data["internalSource"]);
+		if(isset($this->oRequestRTD->aaSettings["WEBPL"]["TRADE"]))
+		{
+
+			$aUrl[] = "t=" . date("c", strtotime($this->aTrade["fid_date"] . " " . $this->aTrade["fid_time"]));
+			$aUrl[] = "e=" . $this->oRequestRTD->oExchanges->GetExchangeSymbol($this->aTrade["fid_exchange_id"]);
+			$aUrl[] = "i=" . $this->oRequestRTD->oContracts->GetISIN($this->aTrade["fid_contract_id"]);
+			$aUrl[] = "s=" . $this->oRequestRTD->oContracts->GetSymbol($this->aTrade["fid_contract_id"]);
+			$aUrl[] = "c=" . $this->oRequestRTD->oContracts->GetSymbol($this->aTrade["fid_currency_id"]);
+			$aUrl[] = "q=" . $this->aTrade["fid_contracts_long"] - $this->aTrade["fid_contracts_long"];
+			$aUrl[] = "p=" . (float) $this->aTrade["fid_price"];
+			$aUrl[] = "acc=" . $this->oRequestRTD->oAccounts->GetAccountSpec1($this->trade["fid_account_id"])." ".$this->oRequestRTD->oAccounts->GetAccountSpec2($this->trade["fid_account_id"]);
+			$aUrl[] = "agg=" . ($this->aTrade["fid_trade_flags"] == 4096 ? "Y": "N");
+			$aUrl[] = "eoi=" . $this->aTrade["fid_order_number"];
+			$aUrl[] = "eti=" . $this->aTrade["fid_trade_number"];
+			$aUrl[] = "ioi=" . $this->aTrade["fid_rtd_order_id"];
+			$aUrl[] = "iti=" . $this->aTrade["fid_trade_id"];
+			$aUrl[] = "is=" . $this->oRequestRTD->aaSettings["WEBPL"]["SOURCENAME"];
+
+      foreach($aUrl AS $key=>$value)
+        $aUrl[$key] = urlencode($value);
 
 			$url = implode("&",$aUrl);
 
-			print "?" . $url . "\n";
+      print ".";
+
+      print $this->oRequestRTD->aaSettings["WEBPL"]["TRADE"] . "?" . $url;
+      //$result = file_get_contents($this->oRequestRTD->aaSettings["WEBPL"]["TRADE"] . "?" . $url);
+
+			//print $results . "\n";
 
 			unset($data);
 			unset($aUrl);

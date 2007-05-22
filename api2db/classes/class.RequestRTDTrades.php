@@ -79,24 +79,32 @@ class CRequestRTDTrades extends CRequestRTD {
 	// function gets settings from respective ini to load the last trade id
 	public function LoadLastTradeId()
 	{
-	  $this->iLastTradeId = 1487260;
-	  return;
+	  //$this->iLastTradeId = 1487260;
+	  //return;
 
-		if(isset($this->aaSettings["TRADE"]))
+    print "checking trade id!";
+
+    if(isset($this->aaSettings["WEBPL"]))
+    {
+      $this->iLastTradeId = file_get_contents($this->aaSettings["WEBPL"]["NEXTID"]);
+      print "loading since trade id = ". $this->iLastTradeId . "\n";
+    }
+		elseif(isset($this->aaSettings["TRADE"]))
 		{
 			if(!isset($this->aaSettings["TRADE"]["LAST_DB"], $this->aaSettings["TRADE"]["LAST_TABLE"]))
 			{
 				wlog(get_class($this), "E Arggghhhh last trade settings not found in INI file!!! Can't continue! Blowing up ungracefully...");
 				unset($this);
+				exit();
 			}
-		}
-		$this->oDatabase->SelectDatabase($this->aaSettings["TRADE"]["LAST_DB"]);
-		$table = $this->aaSettings["TRADE"]["LAST_TABLE"];
-		$data = "lastId";
-		$where = Array("hostname='". $this->aaSettings["HOSTNAME"]. "'");
+  		$this->oDatabase->SelectDatabase($this->aaSettings["TRADE"]["LAST_DB"]);
+  		$table = $this->aaSettings["TRADE"]["LAST_TABLE"];
+  		$data = "lastId";
+  		$where = Array("hostname='". $this->aaSettings["HOSTNAME"]. "'");
 
-		list($result) = $this->oDatabase->SelectQueryWhere($table, $data, $where);
-		$this->iLastTradeId = $result["lastId"];
+  		list($result) = $this->oDatabase->SelectQueryWhere($table, $data, $where);
+  		$this->iLastTradeId = $result["lastId"];
+  	}
 	}
 
    public function SendRequests()
@@ -115,10 +123,11 @@ class CRequestRTDTrades extends CRequestRTD {
 
    protected function ParseResponse($rid, &$message)
    {
-   	//print $this->aRequestTypes[$rid] . "\n";
+   	print $this->aRequestTypes[$rid] . "\n";
 		switch($this->aRequestTypes[$rid])
 		{
       case "rid_trade_t":
+         		print "!";
          $this->oTrades->DecodeResponse($message);
          $this->oTrades->ProcessResponse();
          break;
@@ -144,8 +153,8 @@ class CRequestRTDTrades extends CRequestRTD {
          break;
       // Response header
       case "rid_answer_t":
-		default:
-			break;
+		  default:
+        break;
 		}
    }
 
