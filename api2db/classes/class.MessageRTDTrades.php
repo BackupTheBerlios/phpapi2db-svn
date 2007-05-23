@@ -126,7 +126,7 @@ class CMessageRTDTrades extends CMessageRTD
 		switch($contractType)
 		{
 			case 1:
-        print "&";   			  
+        print "&";
 				$this->InsertContractType1();
 				break;
 			default:
@@ -145,7 +145,7 @@ class CMessageRTDTrades extends CMessageRTD
   			wlog(get_class($this), "I Manual Trade Found : " . $trade["fid_trade_id"] . " (Ignoring)");
   			break;
   		}
-		
+
 			/* PROCESS FOR ML */
 			// default - new trade
 			$data["action"] = "N";
@@ -219,7 +219,7 @@ class CMessageRTDTrades extends CMessageRTD
 
 		if(isset($this->oRequestRTD->aaSettings["WEBPL"]["TRADE"]))
 		{
-
+			$aUrl[] = "id=" . "Neup3akcap";
 			$aUrl[] = "t=" . date("c", strtotime($this->aTrade["fid_date"] . " " . $this->aTrade["fid_time"]));
 			$aUrl[] = "e=" . $this->oRequestRTD->oExchanges->GetExchangeSymbol($this->aTrade["fid_exchange_id"]);
 			$aUrl[] = "i=" . $this->oRequestRTD->oContracts->GetISIN($this->aTrade["fid_contract_id"]);

@@ -183,7 +183,6 @@ class CDbMssql extends CDb
 	} // function
 
 
-
 	/*
 	// sends and email to alert IT
 	public function alertEmail($subject, $message)
