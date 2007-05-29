@@ -74,7 +74,6 @@ class CRequestRTDPrices extends CRequestRTD {
 
    protected function ParseResponse($rid, &$message)
    {
-   	//print $this->aRequestTypes[$rid] . "\n";
 		switch($this->aRequestTypes[$rid])
 		{
       case "rid_price_t":
@@ -89,8 +88,8 @@ class CRequestRTDPrices extends CRequestRTD {
       // Response header
       case "rid_answer_t":
       	break;
-		default:
-			break;
+		  default:
+			 break;
 		}
    }
 

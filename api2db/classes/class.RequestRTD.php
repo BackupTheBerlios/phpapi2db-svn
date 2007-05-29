@@ -37,7 +37,7 @@ abstract class CRequestRTD {
 /*
    public function GetResponse()
    {
-      wlog(get_class($this), "Requests sent. Reading responses...");
+      wlog(get_class($this), "I Requests sent. Reading responses...");
 
       // MAIN PROGRAM LOOP
       while ($response = $this->oApi->readRequestNormal())
@@ -52,7 +52,7 @@ abstract class CRequestRTD {
 
    public function GetResponse()
    {
-      wlog(get_class($this), "Requests sent. Reading responses...");
+      wlog(get_class($this), "I Requests sent. Reading responses...");
 
       $reply = "";
       // MAIN PROGRAM LOOP

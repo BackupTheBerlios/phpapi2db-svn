@@ -72,7 +72,8 @@ class CMessageRTDTrades extends CMessageRTD
 
 	public function GetRequest()
 	{
-		$requests = "32|359|1|99|".$this->oRequestRTD->iLastTradeId."|15|0|105|1";
+	   $nextTradeId = (int) $this->oRequestRTD->iLastTradeId + 1;
+		$requests = "32|359|1|99|". $nextTradeId . "|15|0|105|1";
 		$requests = strtr($requests,"|",chr(31));
 		return $requests;
 	}
@@ -122,11 +123,10 @@ class CMessageRTDTrades extends CMessageRTD
 	{
 		$contractId = $this->aTrade["fid_contract_id"];
 		$contractType = $this->oRequestRTD->oContracts->GetContractType($contractId);
-				print "*";
+		
 		switch($contractType)
 		{
 			case 1:
-        print "&";
 				$this->InsertContractType1();
 				break;
 			default:
@@ -137,6 +137,7 @@ class CMessageRTDTrades extends CMessageRTD
 
 	private function InsertContractType1()
 	{
+
 		if(isset($this->oRequestRTD->aaSettings["ML"]))
 		{
   		// if manual trade then ignore it
@@ -202,7 +203,7 @@ class CMessageRTDTrades extends CMessageRTD
 			$data["currency"] = $this->oRequestRTD->oContracts->GetSymbol($this->aTrade["fid_currency_id"]);
 			$data["quantity"] = $this->aTrade["fid_contracts_long"] - $this->aTrade["fid_contracts_long"];
 			$data["price"] = (float) $this->aTrade["fid_price"];
-			$data["account"] = $this->oRequestRTD->oAccounts->GetAccountSpec1($this->trade["fid_account_id"])." ".$this->oRequestRTD->oAccounts->GetAccountSpec2($this->trade["fid_account_id"]);
+			$data["account"] = $this->oRequestRTD->oAccounts->aaAccounts[$this->aTrade["fid_account_id"]]["fid_account_spec1"]." ".$this->oRequestRTD->oAccounts->aaAccounts[$this->aTrade["fid_account_id"]]["fid_account_spec2"];
 			$data["aggressor"] = ($this->aTrade["fid_trade_flags"] == 4096 ? "Y": "N");
 			$data["exchangeOrderId"] = $this->aTrade["fid_order_number"];
 			$data["exchangeTradeId"] = $this->aTrade["fid_trade_number"];
@@ -219,36 +220,36 @@ class CMessageRTDTrades extends CMessageRTD
 
 		if(isset($this->oRequestRTD->aaSettings["WEBPL"]["TRADE"]))
 		{
-			$aUrl[] = "id=" . "Neup3akcap";
-			$aUrl[] = "t=" . date("c", strtotime($this->aTrade["fid_date"] . " " . $this->aTrade["fid_time"]));
-			$aUrl[] = "e=" . $this->oRequestRTD->oExchanges->GetExchangeSymbol($this->aTrade["fid_exchange_id"]);
-			$aUrl[] = "i=" . $this->oRequestRTD->oContracts->GetISIN($this->aTrade["fid_contract_id"]);
-			$aUrl[] = "s=" . $this->oRequestRTD->oContracts->GetSymbol($this->aTrade["fid_contract_id"]);
-			$aUrl[] = "c=" . $this->oRequestRTD->oContracts->GetSymbol($this->aTrade["fid_currency_id"]);
-			$aUrl[] = "q=" . $this->aTrade["fid_contracts_long"] - $this->aTrade["fid_contracts_long"];
-			$aUrl[] = "p=" . (float) $this->aTrade["fid_price"];
-			$aUrl[] = "acc=" . $this->oRequestRTD->oAccounts->GetAccountSpec1($this->trade["fid_account_id"])." ".$this->oRequestRTD->oAccounts->GetAccountSpec2($this->trade["fid_account_id"]);
-			$aUrl[] = "agg=" . ($this->aTrade["fid_trade_flags"] == 4096 ? "Y": "N");
-			$aUrl[] = "eoi=" . $this->aTrade["fid_order_number"];
-			$aUrl[] = "eti=" . $this->aTrade["fid_trade_number"];
-			$aUrl[] = "ioi=" . $this->aTrade["fid_rtd_order_id"];
-			$aUrl[] = "iti=" . $this->aTrade["fid_trade_id"];
-			$aUrl[] = "is=" . $this->oRequestRTD->aaSettings["WEBPL"]["SOURCENAME"];
+			$aaUrl["id"] = "Neup3akcap";
+			$aaUrl["t"] = date("c", strtotime($this->aTrade["fid_date"] . " " . $this->aTrade["fid_time"]));
+			$aaUrl["e"] = $this->oRequestRTD->oExchanges->GetExchangeSymbol($this->aTrade["fid_exchange_id"]);
+			$aaUrl["i"] = $this->oRequestRTD->oContracts->GetISIN($this->aTrade["fid_contract_id"]);
+			$aaUrl["s"] = $this->oRequestRTD->oContracts->GetSymbol($this->aTrade["fid_contract_id"]);
+			$aaUrl["c"] = $this->oRequestRTD->oContracts->GetSymbol($this->aTrade["fid_currency_id"]);
+			$aaUrl["q"] = $this->aTrade["fid_contracts_long"] - $this->aTrade["fid_contracts_short"];
+			$aaUrl["p"] = (float) $this->aTrade["fid_price"];
+			$aaUrl["acc"] = $this->oRequestRTD->oAccounts->aaAccounts[$this->aTrade["fid_account_id"]]["fid_account_spec1"]." ".$this->oRequestRTD->oAccounts->aaAccounts[$this->aTrade["fid_account_id"]]["fid_account_spec2"];
+			$aaUrl["agg"] = ($this->aTrade["fid_trade_flags"] == 4096 ? "Y": "N");
+			$aaUrl["eoi"] = $this->aTrade["fid_order_number"];
+			$aaUrl["eti"] = $this->aTrade["fid_trade_number"];
+			$aaUrl["ioi"] = $this->aTrade["fid_rtd_order_id"];
+			$aaUrl["iti"] = $this->aTrade["fid_trade_id"];
+			$aaUrl["is"] = $this->oRequestRTD->aaSettings["WEBPL"]["SOURCENAME"];
 
-      foreach($aUrl AS $key=>$value)
-        $aUrl[$key] = urlencode($value);
+      foreach($aaUrl AS $key => $value)
+        $aUrl[] = $key . "=" . urlencode($value);
 
 			$url = implode("&",$aUrl);
+   
+      $result = file_get_contents($this->oRequestRTD->aaSettings["WEBPL"]["TRADE"] . "?" . $url);
 
-      print ".";
-
-      print $this->oRequestRTD->aaSettings["WEBPL"]["TRADE"] . "?" . $url;
-      //$result = file_get_contents($this->oRequestRTD->aaSettings["WEBPL"]["TRADE"] . "?" . $url);
-
-			//print $results . "\n";
-
-			unset($data);
-			unset($aUrl);
+			if($result != 0)
+			{
+        wLog(get_class($this), "E WEBPL Trade insert failed. Died on {$this->oRequestRTD->aaSettings["WEBPL"]["SOURCENAME"]} trade id {$this->aTrade["fid_trade_id"]}");
+        exit(1);
+      }
+      
+			unset($data, $aaUrl, $aUrl, $url);
 		}
 	}
 

@@ -39,21 +39,21 @@ class CSocketStream
 		$connectionTimeWait = 600; // 10 minutes
 
 
-		wLog(get_class($this), "TCP/IP Connection for RTD API Started");
+		wLog(get_class($this), "I TCP/IP Connection for RTD API Started");
 
 		/* Create a TCP/IP socket. */
 		$socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
 		if ($socket < 0)
 		{
-		   wLog(get_class($this), "Function socket_create() failed. Reason: " . socket_strerror($socket));
+		   wLog(get_class($this), "E Function socket_create() failed. Reason: " . socket_strerror($socket));
 		   exit($socket);
 		}
 		else
 		{
-		   wLog(get_class($this), "OK! Socket created");
+		   wLog(get_class($this), "I OK! Socket created");
 		}
 
-		wLog(get_class($this), "Attempting to connect to '" . $ip . "' on port '" . $port);
+		wLog(get_class($this), "I Attempting to connect to '" . $ip . "' on port '" . $port);
 
 		while(TRUE)
 		{
@@ -61,7 +61,7 @@ class CSocketStream
 			if (FALSE)
 			{
 				$connectionAttempts++;
-			   wLog(get_class($this), "Function socket_connect() failed $connectionAttempts of $connectionAttemptsMax attempts. Reason: ($result) " . socket_strerror($result));
+			   wLog(get_class($this), "E Function socket_connect() failed $connectionAttempts of $connectionAttemptsMax attempts. Reason: ($result) " . socket_strerror($result));
 			   if($connectionAttempts <= $connectionAttemptsMax)
 			   	sleep($connectionTimeWait);
 			   else
@@ -69,7 +69,7 @@ class CSocketStream
 			}
 			else
 			{
-			   wLog(get_class($this), "OK! Connection up");
+			   wLog(get_class($this), "I OK! Connection up");
 			   break;
 			}
 		}
@@ -92,19 +92,19 @@ class CSocketStream
 		// Write what we are send to log
 		foreach($aRequests AS $request)
 		{
-			wLog(get_class($this), "Sending string : $request");
+			wLog(get_class($this), "I Sending string : $request");
 		}
 		$requests .= chr(10);
 		$result = socket_write($this->socket, $requests, strlen($requests));
 
 		if ($result === FALSE)
 		{
-			wLog(get_class($this), "Function socket_write() failed. Reason: " . socket_strerror(socket_last_error()));
+			wLog(get_class($this), "E Function socket_write() failed. Reason: " . socket_strerror(socket_last_error()));
 			exit(socket_last_error());
 		}
 		else
 		{
-			wLog(get_class($this), "OK! Wrote $result bytes");
+			wLog(get_class($this), "I OK! Wrote $result bytes");
 		}
 	}
 
@@ -115,7 +115,7 @@ class CSocketStream
 
 		if ($reply === FALSE)
 		{
-			wLog(get_class($this), "Function socket_read() failed. Reason: " . socket_strerror(socket_last_error()));
+			wLog(get_class($this), "E Function socket_read() failed. Reason: " . socket_strerror(socket_last_error()));
 			exit(socket_last_error());
 		}
 		// else return the reply
@@ -129,7 +129,7 @@ class CSocketStream
 
 		if ($reply === FALSE)
 		{
-			wLog("socket_read() failed. Reason: " . socket_strerror(socket_last_error()));
+			wLog(get_class($this), "E socket_read() failed. Reason: " . socket_strerror(socket_last_error()));
 			exit(socket_last_error());
 		}
 		// else return the reply
@@ -139,7 +139,7 @@ class CSocketStream
 	// Close the socket
 	public function closeApi()
 	{
-		wLog(get_class($this), "Closing connection...");
+		wLog(get_class($this), "I Closing connection...");
 		socket_close($this->socket);
 	}
 

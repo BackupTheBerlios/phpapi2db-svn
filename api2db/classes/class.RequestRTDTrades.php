@@ -29,7 +29,7 @@ class CRequestRTDTrades extends CRequestRTD {
    {
    	$this->aaSettings = $settings;
 
-      wLog(get_class($this), " \n--- Loading ---");
+      wLog(get_class($this), "I --- Loading ---");
 		// Check ML Clear settings
 		if(!isset($this->aaSettings["DB"]["HOST"], $this->aaSettings["DB"]["USERNAME"], $this->aaSettings["DB"]["PASSWORD"]))
 		{
@@ -49,12 +49,12 @@ class CRequestRTDTrades extends CRequestRTD {
 
    function __destruct()
    {
-      wLog(get_class($this), "--- Shuting down ---");
+      wLog(get_class($this), "I --- Shuting down ---");
 
       if(isset($this->oApi)) unset($this->api);
       if(isset($this->oDatabase)) unset($this->database);
 
-		wLog(get_class($this), "--- Stopped ---\n ");
+		wLog(get_class($this), "I --- Stopped ---\n ");
 	}
 
 	public function Initialise()
@@ -72,22 +72,18 @@ class CRequestRTDTrades extends CRequestRTD {
       $this->LoadLastTradeId();
       //$this->oTrades->LoadSettlements();
 
-      wLog(get_class($this), "--- Initialised ---");
+      wLog(get_class($this), "I --- Initialised ---");
 	}
 
 
 	// function gets settings from respective ini to load the last trade id
 	public function LoadLastTradeId()
 	{
-	  //$this->iLastTradeId = 1487260;
-	  //return;
-
-    print "checking trade id!";
-
     if(isset($this->aaSettings["WEBPL"]))
     {
+      wlog(get_class($this), "I Processing trades for WEBPL");
       $this->iLastTradeId = file_get_contents($this->aaSettings["WEBPL"]["NEXTID"]);
-      print "loading since trade id = ". $this->iLastTradeId . "\n";
+      wlog(get_class($this), "I Processing trades since rtd_trade_id=". $this->iLastTradeId);
     }
 		elseif(isset($this->aaSettings["TRADE"]))
 		{
@@ -97,6 +93,7 @@ class CRequestRTDTrades extends CRequestRTD {
 				unset($this);
 				exit();
 			}
+			wlog(get_class($this), "I Processing trades for DB");
   		$this->oDatabase->SelectDatabase($this->aaSettings["TRADE"]["LAST_DB"]);
   		$table = $this->aaSettings["TRADE"]["LAST_TABLE"];
   		$data = "lastId";
@@ -123,11 +120,9 @@ class CRequestRTDTrades extends CRequestRTD {
 
    protected function ParseResponse($rid, &$message)
    {
-   	print $this->aRequestTypes[$rid] . "\n";
 		switch($this->aRequestTypes[$rid])
 		{
       case "rid_trade_t":
-         		print "!";
          $this->oTrades->DecodeResponse($message);
          $this->oTrades->ProcessResponse();
          break;
@@ -147,12 +142,13 @@ class CRequestRTDTrades extends CRequestRTD {
       case "rid_exchange_t":
          $this->oExchanges->DecodeResponse($message);
          break;
-      // Exchange info
+      // Group info
       case "rid_group_t":
          $this->oGroups->DecodeResponse($message);
          break;
       // Response header
       case "rid_answer_t":
+        //print  $this->aRequestTypes[$rid] . "\t" . $message . "\n";
 		  default:
         break;
 		}
