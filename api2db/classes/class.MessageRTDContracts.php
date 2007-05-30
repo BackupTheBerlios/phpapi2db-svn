@@ -64,6 +64,7 @@ class CMessageRTDContracts extends CMessageRTD
 				case "fid_country":
 				case "fid_contract_type":
 				case "fid_expiration_month":
+				case "fid_exchange_contract_id":
 					$aFields[$this->aFieldTypes[$aMessage[$i]]] = $aMessage[++$i];
 					break;
 				default:

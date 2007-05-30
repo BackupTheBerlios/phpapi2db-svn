@@ -126,11 +126,13 @@ class CMessageRTDPrices extends CMessageRTD
 			{
 				case "1":
 					$symbol = $this->oRequestRTD->oContracts->aaContracts[$this->aPrice["fid_contract_id"]]["fid_symbol"];
+					$identifier = $this->oRequestRTD->oContracts->aaContracts[$this->aPrice["fid_contract_id"]]["fid_isin"];
 					break;
 
 				case "7":
 					$symbol = $this->oRequestRTD->oContracts->aaContracts[$this->aPrice["fid_contract_id"]]["fid_symbol"] . " " .
 					$this->oRequestRTD->oContracts->aaContracts[$this->aPrice["fid_contract_id"]]["fid_expiration_month"];
+					$identifier = $this->oRequestRTD->oContracts->aaContracts[$this->aPrice["fid_contract_id"]]["fid_exchange_contract_id"];
 					break;
 
 				case "8":
@@ -139,6 +141,7 @@ class CMessageRTDPrices extends CMessageRTD
 					$this->oRequestRTD->oContracts->aaContracts[$this->aPrice["fid_contract_id"]]["fid_expiration_month"].
 					isset($this->oRequestRTD->oContracts->aaContracts[$this->aPrice["fid_contract_id"]]["fid_strike"]) ? " ".$this->oRequestRTD->oContracts->aaContracts[$this->aPrice["fid_contract_id"]]["fid_strike"]." " : "" .
 					isset($this->oRequestRTD->oContracts->aaContracts[$this->aPrice["fid_contract_id"]]["fid_put_call"]) ? ($this->oRequestRTD->oContracts->aaContracts[$this->aPrice["fid_contract_id"]]["fid_put_call"] == 1 ? " P" : " C") : "";
+					$identifier = $this->oRequestRTD->oContracts->aaContracts[$this->aPrice["fid_contract_id"]]["fid_exchange_contract_id"];
 					break;
 
 				default:
@@ -146,7 +149,7 @@ class CMessageRTDPrices extends CMessageRTD
 					exit(1);
 			}
 			$data["symbol"] = $symbol;
-
+			$data["identifier"] = $identifier;
 
 			$data["tickTime"] = date("Y-m-d H:i:s", $this->aPrice["tickTime"]);
 			$data["tickMicroTime"] = $this->aPrice["tickMicroTime"];
@@ -161,10 +164,12 @@ class CMessageRTDPrices extends CMessageRTD
 			$data["totalVolume"] = $this->aPrice["fid_total_volume"];
 			$data["phaseId"] = $this->aPrice["fid_phase"];
 
+//print_r($data);
+
 			// select the TRADE database
 			$this->oRequestRTD->oDatabase->SelectDatabase($this->oRequestRTD->aaSettings["QUICKTICK"]["DATABASE"]);
 			// send trade to the database
-			$this->oRequestRTD->oDatabase->InsertQuery($this->oRequestRTD->aaSettings["QUICKTICK"]["TABLE_PREFIX"]."_".date("Ym"), $data);
+			$this->oRequestRTD->oDatabase->InsertQuery($this->oRequestRTD->aaSettings["QUICKTICK"]["TABLE_PREFIX"]."_".date("ym"), $data);
 		}
 
 	}
