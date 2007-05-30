@@ -78,7 +78,7 @@ class CRequestRTDPrices extends CRequestRTD {
 		{
       case "rid_price_t":
          $contractType = $this->oPrices->DecodeResponse($message);
-         if(array_key_exists($contractType, array_keys($this->aaSettings["CONTRACT_TYPES"])))
+         if(array_key_exists($contractType, $this->aaSettings["CONTRACT_TYPES"]))
          	$this->oPrices->ProcessResponse();
          break;
       // stocks, futures, currencies, options etc
