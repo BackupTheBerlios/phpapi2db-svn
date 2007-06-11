@@ -123,7 +123,11 @@ class CMessageRTDTrades extends CMessageRTD
 	{
 		$contractId = $this->aTrade["fid_contract_id"];
 		$contractType = $this->oRequestRTD->oContracts->GetContractType($contractId);
+<<<<<<< .working
+
+=======
 		
+>>>>>>> .merge-right.r6
 		switch($contractType)
 		{
 			case 1:
@@ -218,7 +222,7 @@ class CMessageRTDTrades extends CMessageRTD
 			unset($data);
 		}
 
-		if(isset($this->oRequestRTD->aaSettings["WEBPL"]["TRADE"]))
+		if(isset($this->oRequestRTD->aaSettings["WEBPL"]["TRADE"]) || isset($this->oRequestRTD->aaSettings["SEQUENCE"]["TRADE"]))
 		{
 			$aaUrl["id"] = "Neup3akcap";
 			$aaUrl["t"] = date("c", strtotime($this->aTrade["fid_date"] . " " . $this->aTrade["fid_time"]));
@@ -239,10 +243,21 @@ class CMessageRTDTrades extends CMessageRTD
       foreach($aaUrl AS $key => $value)
         $aUrl[] = $key . "=" . urlencode($value);
 
-			$url = implode("&",$aUrl);
+		$url = implode("&",$aUrl);
    
       $result = file_get_contents($this->oRequestRTD->aaSettings["WEBPL"]["TRADE"] . "?" . $url);
 
+<<<<<<< .working
+      $result = file_get_contents($this->oRequestRTD->aaSettings["WEBPL"]["TRADE"] . "?" . $url);
+
+		if($result != 0)
+		{
+        wLog(get_class($this), "E WEBPL Trade insert failed. Died on {$this->oRequestRTD->aaSettings["WEBPL"]["SOURCENAME"]} trade id {$this->aTrade["fid_trade_id"]}");
+        exit(1);
+      }
+
+			unset($data, $aaUrl, $aUrl, $url);
+=======
 			if($result != 0)
 			{
         wLog(get_class($this), "E WEBPL Trade insert failed. Died on {$this->oRequestRTD->aaSettings["WEBPL"]["SOURCENAME"]} trade id {$this->aTrade["fid_trade_id"]}");
@@ -250,6 +265,7 @@ class CMessageRTDTrades extends CMessageRTD
       }
       
 			unset($data, $aaUrl, $aUrl, $url);
+>>>>>>> .merge-right.r6
 		}
 	}
 
