@@ -29,7 +29,7 @@ if(!is_dir(dirname(LOG_FILE)))
 // Check that we can write to log file
 if(!is_file(LOG_FILE))
 {
-  if(!file_put_contents(LOG_FILE, date("c ") . "Log created \r\n\r" , FILE_APPEND))
+  if(!file_put_contents(LOG_FILE, date("c ") . "Log created \r\n" , FILE_APPEND))
   {
     print "Failed making log file ". LOG_FILE ."\n";
     exit(1);
@@ -50,7 +50,7 @@ function wLog($class, $messages)
   $messages = explode("\n", $messages);
   foreach($messages AS $msg)
   {
-	  file_put_contents(LOG_FILE, date("c ")."$class\t$msg\r" , FILE_APPEND);
+	  file_put_contents(LOG_FILE, date("c ")."$class\t$msg\r\n" , FILE_APPEND);
 	}
 }
 

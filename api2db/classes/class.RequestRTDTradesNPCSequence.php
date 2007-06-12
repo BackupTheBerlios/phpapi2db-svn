@@ -17,10 +17,10 @@ class CRequestRTDTradesNPCSequence extends CRequestRTD {
    public $oExchanges; // holds all data for exchanges. Key = fid_exchange_id
    public $oTrades;
 
-   public $iLastTradeId;
+   public $iLastTradeId = -1;
    public $aAllTradeIds; // Holds an array of all trade ids we are looking for.
 
-   private function GetLastTradeId() { return $this->iLastTradeId; }
+   public function GetLastTradeId() { return $this->iLastTradeId; }
 
    function __construct(Array &$settings)
    {
@@ -28,6 +28,12 @@ class CRequestRTDTradesNPCSequence extends CRequestRTD {
 
       wLog(get_class($this), "I --- Loading ---");
 		// Check Sequence settings
+		if(!isset($this->aaSettings["SEQUENCE"]["NEXTID"]))
+		{
+			wlog(get_class($this), "E  Arggghhhh Sequence settings not found in INI file!!! Blowing up ungracefully...");
+			unset($this);
+		}
+    // Check Sequence settings
 		if(!isset($this->aaSettings["SEQUENCE"]["SOURCENAME"], $this->aaSettings["SEQUENCE"]["NEXTID"], $this->aaSettings["SEQUENCE"]["TRADE"]))
 		{
 			wlog(get_class($this), "E  Arggghhhh Sequence settings not found in INI file!!! Blowing up ungracefully...");
@@ -39,7 +45,6 @@ class CRequestRTDTradesNPCSequence extends CRequestRTD {
 			wlog(get_class($this), "E  Arggghhhh RTDHOST settings not found in INI file!!! Blowing up ungracefully...");
 			unset($this);
 		}
-      //$this->oApi = new CSocketStream($this->aaSettings["RTDHOST"]["IP"], $this->aaSettings["RTDHOST"]["PORT"]);
 	}
 
    function __destruct()
@@ -54,6 +59,9 @@ class CRequestRTDTradesNPCSequence extends CRequestRTD {
 
 	public function Initialise()
 	{
+      // Loads last trade id
+      $this->LoadLastTradeId();
+
       $this->oContracts = new CMessageRTDContracts($this);
       $this->oUsers = new CMessageRTDUsers();
       $this->oAccounts = new CMessageRTDAccounts();
@@ -62,9 +70,6 @@ class CRequestRTDTradesNPCSequence extends CRequestRTD {
 
       // Pass a refernce of this to the trade object
       $this->oTrades = new CMessageRTDTrades($this);
-
-      // Loads last trade id
-      $this->LoadLastTradeId();
 
       wLog(get_class($this), "I --- Initialised ---");
 	}
@@ -77,26 +82,29 @@ class CRequestRTDTradesNPCSequence extends CRequestRTD {
 		{
 			wlog(get_class($this), "I Processing trades for SEQUENCE");
 			wlog(get_class($this), "I Getting sequence from ". $this->aaSettings["SEQUENCE"]["NEXTID"]);
-			$ids = file_get_contents($this->aaSettings["SEQUENCE"]["NEXTID"]);
+			$ids = @file_get_contents($this->aaSettings["SEQUENCE"]["NEXTID"]);
 			wlog(get_class($this), "I Response was: ". $ids);
 			if($ids !== FALSE && $ids[0] != "FALSE")
 			{
 				$ids = explode(",", $ids);
-				print_r($ids);
-				$this->iLastTradeId = $ids[0];
+				$this->iLastTradeId = $ids[0] - 1; // Had to do it!
 				$this->aAllTradeIds = $ids;
+				wlog(get_class($this), "I Processing trades since rtd_trade_id=". $this->iLastTradeId);
 			}
+			elseif($ids === FALSE)
+			{
+        wlog(get_class($this), "W Couldn't fetch sequence check url");
+      }
 			else
 			{
 				wlog(get_class($this), "I All trades are in sequence");
-				exit(-1);
 			}
-			wlog(get_class($this), "I Processing trades since rtd_trade_id=". $this->iLastTradeId);
 		}
 	}
 
    public function SendRequests()
    {
+      $this->oApi = new CSocketStream($this->aaSettings["RTDHOST"]["IP"], $this->aaSettings["RTDHOST"]["PORT"]);
 	   // Get the list of queries to send to the API
       $requests[] = $this->oContracts->GetRequest();
       $requests[] = $this->oExchanges->GetRequest();
@@ -115,8 +123,11 @@ class CRequestRTDTradesNPCSequence extends CRequestRTD {
 		{
       case "rid_trade_t":
          $this->oTrades->DecodeResponse($message);
-         if(in_array($this->oTrades->aTrade["fid_trade_id"], $this->aAllTradeIds))
+         if(in_array($this->oTrades->GetTradeID(), $this->aAllTradeIds))
+         {
 	         $this->oTrades->ProcessResponse();
+	         unset($this->aAllTradeIds[array_search($this->oTrades->GetTradeID(),$this->aAllTradeIds)]);
+	       }
          break;
       // stocks, futures, currencies, options etc
       case "rid_contract_t":
@@ -140,10 +151,52 @@ class CRequestRTDTradesNPCSequence extends CRequestRTD {
          break;
       // Response header
       case "rid_answer_t":
-        //print  $this->aRequestTypes[$rid] . "\t" . $message . "\n";
+        $oAnswer = new CMessageRTDAnswer();
+        $oAnswer->DecodeResponse($message);
+        unset($oAnswer);
 		  default:
         break;
 		}
+   }
+
+
+   public function GetResponse()
+   {
+      wlog(get_class($this), "I Requests sent. Reading responses...");
+
+      $reply = "";
+      // MAIN PROGRAM LOOP
+      while (count($this->aAllTradeIds) > 0)
+      { // append to data left from previous request
+        $reply .= $this->oApi->readRequestBinary();
+        // if the last character isn't the EOT character, then this contains a part response
+        //print ".";
+        if ($reply[strlen($reply)-1] != chr(10))
+  			{
+          $nlpos = strrpos($reply, chr(10));
+          if ($nlpos !== false)
+				  {
+            // has a full response plus a part response
+            // process the full response sub string
+            $aResponses = explode(chr(10), trim(substr($reply, 0, $nlpos + 1)));
+            $reply = substr($reply, $nlpos + 1); // keep the part response
+          }
+            // else it is only part of another response so leave $reply set
+        }
+        else
+        {
+          // is simply a full response, so process it
+          $aResponses = explode(chr(10), trim($reply));
+          $reply = "";
+        }
+         // now parse each message one at a time
+	      foreach($aResponses AS $response)
+  			{
+  				$rid = substr($response, 0, strpos($response, chr(31)));
+  				$response = substr($response, strpos($response, chr(31))+1);
+  				$this->ParseResponse($rid, $response);
+  			}
+      } // while
    }
 
 } // end class

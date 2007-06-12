@@ -24,6 +24,9 @@ class CMessageRTDTrades extends CMessageRTD
 	// all message structures, api and database abjects
 	private $oRequestRTD;
 
+
+  public function GetTradeID() {return $this->aTrade["fid_trade_id"];}
+
 	function __construct(&$oRequestRTD)
 	{
 		$this->oRequestRTD =& $oRequestRTD;
@@ -73,7 +76,7 @@ class CMessageRTDTrades extends CMessageRTD
 	public function GetRequest()
 	{
 	   $nextTradeId = (int) $this->oRequestRTD->iLastTradeId + 1;
-		$requests = "32|359|1|99|". $nextTradeId . "|15|0|105|1";
+		$requests = "32|359|1|99|". $nextTradeId . "|15|32|105|1";
 		$requests = strtr($requests,"|",chr(31));
 		return $requests;
 	}
@@ -123,11 +126,7 @@ class CMessageRTDTrades extends CMessageRTD
 	{
 		$contractId = $this->aTrade["fid_contract_id"];
 		$contractType = $this->oRequestRTD->oContracts->GetContractType($contractId);
-<<<<<<< .working
 
-=======
-		
->>>>>>> .merge-right.r6
 		switch($contractType)
 		{
 			case 1:
@@ -222,9 +221,11 @@ class CMessageRTDTrades extends CMessageRTD
 			unset($data);
 		}
 
-		if(isset($this->oRequestRTD->aaSettings["WEBPL"]["TRADE"]) || isset($this->oRequestRTD->aaSettings["SEQUENCE"]["TRADE"]))
+		if(isset($this->oRequestRTD->aaSettings["WEBPL"]["TRADE"]))
 		{
-			$aaUrl["id"] = "Neup3akcap";
+		  // give the trade a unique id, so it is only accepted if it is authorised on the other side.
+			$aaUrl["id"] = md5(date("Ymd") . $this->aTrade["fid_trade_id"]);
+			
 			$aaUrl["t"] = date("c", strtotime($this->aTrade["fid_date"] . " " . $this->aTrade["fid_time"]));
 			$aaUrl["e"] = $this->oRequestRTD->oExchanges->GetExchangeSymbol($this->aTrade["fid_exchange_id"]);
 			$aaUrl["i"] = $this->oRequestRTD->oContracts->GetISIN($this->aTrade["fid_contract_id"]);
@@ -243,29 +244,18 @@ class CMessageRTDTrades extends CMessageRTD
       foreach($aaUrl AS $key => $value)
         $aUrl[] = $key . "=" . urlencode($value);
 
-		$url = implode("&",$aUrl);
-   
+  		$url = implode("&",$aUrl);
+     
+      //print $this->oRequestRTD->aaSettings["WEBPL"]["TRADE"] . "?" . $url . "\n";
       $result = file_get_contents($this->oRequestRTD->aaSettings["WEBPL"]["TRADE"] . "?" . $url);
-
-<<<<<<< .working
-      $result = file_get_contents($this->oRequestRTD->aaSettings["WEBPL"]["TRADE"] . "?" . $url);
-
-		if($result != 0)
-		{
-        wLog(get_class($this), "E WEBPL Trade insert failed. Died on {$this->oRequestRTD->aaSettings["WEBPL"]["SOURCENAME"]} trade id {$this->aTrade["fid_trade_id"]}");
-        exit(1);
+  
+  		if($result === FALSE)
+  		{
+          wLog(get_class($this), "E WEBPL Trade insert failed. Failed on {$this->oRequestRTD->aaSettings["WEBPL"]["SOURCENAME"]} trade id {$this->aTrade["fid_trade_id"]}");
       }
 
 			unset($data, $aaUrl, $aUrl, $url);
-=======
-			if($result != 0)
-			{
-        wLog(get_class($this), "E WEBPL Trade insert failed. Died on {$this->oRequestRTD->aaSettings["WEBPL"]["SOURCENAME"]} trade id {$this->aTrade["fid_trade_id"]}");
-        exit(1);
-      }
-      
-			unset($data, $aaUrl, $aUrl, $url);
->>>>>>> .merge-right.r6
+
 		}
 	}
 

@@ -65,12 +65,15 @@ elseif($argv[1] == "-s" && $argc == 3 && is_file($argv[2]))
 
 	include_once(dirname(__FILE__) . "/inc.global.php");
 
-	$oRequestRTDPrices = new CRequestRTDTradesNPCSequence($settings);
+	$oRequestRTDTrades = new CRequestRTDTradesNPCSequence($settings);
 
 	// Start main program loop
-	$oRequestRTDPrices->Initialise();
-	//$oRequestRTDPrices->SendRequests();
-	//$oRequestRTDPrices->GetResponse();
+	$oRequestRTDTrades->Initialise();
+  if($oRequestRTDTrades->GetLastTradeId() > -1)
+  {
+	 $oRequestRTDTrades->SendRequests();
+	 $oRequestRTDTrades->GetResponse();
+	}
 
 	unset($oRequestRTDTrades);
 

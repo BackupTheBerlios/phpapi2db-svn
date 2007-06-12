@@ -33,7 +33,7 @@ class CMessageRTDPrices extends CMessageRTD
 		}
 
 
-		if(!isset($this->oRequestRTD->aaSettings["QUICKTICK"]["TABLE_PREFIX"],
+		if(!isset($this->oRequestRTD->aaSettings["QUICKTICK"]["TABLE"],
 			$this->oRequestRTD->aaSettings["QUICKTICK"]["DATABASE"],
 			$this->oRequestRTD->aaSettings["QUICKTICK"]["SQLTYPE"]))
 		{
@@ -113,7 +113,6 @@ class CMessageRTDPrices extends CMessageRTD
 	private function ProcessQuicktick()
 	{
 
-
 		if($this->oRequestRTD->oContracts->aaContracts[$this->aPrice["fid_contract_id"]]["fid_total_volume"] < $this->aPrice["fid_total_volume"])
 		{
 			// Update this contracts total volume
@@ -121,27 +120,23 @@ class CMessageRTDPrices extends CMessageRTD
 
 			// Get symbol depending on contract type
             // get the SYMBOLOGY
-
 			switch($this->oRequestRTD->oContracts->aaContracts[$this->aPrice["fid_contract_id"]]["fid_contract_type"])
 			{
 				case "1":
 					$symbol = $this->oRequestRTD->oContracts->aaContracts[$this->aPrice["fid_contract_id"]]["fid_symbol"];
-					$identifier = $this->oRequestRTD->oContracts->aaContracts[$this->aPrice["fid_contract_id"]]["fid_isin"];
 					break;
 
 				case "7":
 					$symbol = $this->oRequestRTD->oContracts->aaContracts[$this->aPrice["fid_contract_id"]]["fid_symbol"] . " " .
 					$this->oRequestRTD->oContracts->aaContracts[$this->aPrice["fid_contract_id"]]["fid_expiration_month"];
-					$identifier = $this->oRequestRTD->oContracts->aaContracts[$this->aPrice["fid_contract_id"]]["fid_exchange_contract_id"];
 					break;
 
 				case "8":
 				case "10":
-					$symbol = $this->oRequestRTD->oContracts->aaContracts[$this->aPrice["fid_contract_id"]]["fid_symbol"] . " " .
-					$this->oRequestRTD->oContracts->aaContracts[$this->aPrice["fid_contract_id"]]["fid_expiration_month"].
-					isset($this->oRequestRTD->oContracts->aaContracts[$this->aPrice["fid_contract_id"]]["fid_strike"]) ? " ".$this->oRequestRTD->oContracts->aaContracts[$this->aPrice["fid_contract_id"]]["fid_strike"]." " : "" .
-					isset($this->oRequestRTD->oContracts->aaContracts[$this->aPrice["fid_contract_id"]]["fid_put_call"]) ? ($this->oRequestRTD->oContracts->aaContracts[$this->aPrice["fid_contract_id"]]["fid_put_call"] == 1 ? " P" : " C") : "";
-					$identifier = $this->oRequestRTD->oContracts->aaContracts[$this->aPrice["fid_contract_id"]]["fid_exchange_contract_id"];
+					$symbol = $$this->oRequestRTD->oContracts->aaContracts[$this->aPrice["fid_contract_id"]]["fid_symbol"] . " " .
+					$this->oRequestRTD->oContracts->aaContracts[$this->aPrice["fid_contract_id"]]["fid_expiration_month"] . " " .
+					$this->oRequestRTD->oContracts->aaContracts[$this->aPrice["fid_contract_id"]]["fid_strike"] . " " .
+					($this->oRequestRTD->oContracts->aaContracts[$this->aPrice["fid_contract_id"]]["fid_put_call"] == 1 ? "P" : "C") .",";
 					break;
 
 				default:
@@ -149,7 +144,7 @@ class CMessageRTDPrices extends CMessageRTD
 					exit(1);
 			}
 			$data["symbol"] = $symbol;
-			$data["identifier"] = $identifier;
+
 
 			$data["tickTime"] = date("Y-m-d H:i:s", $this->aPrice["tickTime"]);
 			$data["tickMicroTime"] = $this->aPrice["tickMicroTime"];
@@ -164,13 +159,85 @@ class CMessageRTDPrices extends CMessageRTD
 			$data["totalVolume"] = $this->aPrice["fid_total_volume"];
 			$data["phaseId"] = $this->aPrice["fid_phase"];
 
-//print_r($data);
-
 			// select the TRADE database
 			$this->oRequestRTD->oDatabase->SelectDatabase($this->oRequestRTD->aaSettings["QUICKTICK"]["DATABASE"]);
 			// send trade to the database
-			$this->oRequestRTD->oDatabase->InsertQuery($this->oRequestRTD->aaSettings["QUICKTICK"]["TABLE_PREFIX"]."_".date("ym"), $data);
+			$this->oRequestRTD->oDatabase->InsertQuery($this->oRequestRTD->aaSettings["QUICKTICK"]["TABLE"], $data);
+
+			//print_r($data);
+
 		}
+
+	}
+
+	private function CheckQuicktick()
+	{
+		// select the TRADE database
+		$this->oRequestRTD->oDatabase->SelectDatabase($this->oRequestRTD->aaSettings["QUICKTICK"]["DATABASE"]);
+
+		$table = $this->oRequestRTD->aaSettings["QUICKTICK"]["TABLE_PREFIX"]."_".date("Ym");
+
+		if($this->oRequestRTD->aaSettings["QUICKTICK"]["SQLTYPE"] == "mssql")
+		{
+			$sql = <<<EOT
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[{$table}]') AND type in (N'U'))
+BEGIN
+CREATE TABLE [dbo].[{$table}](
+	[tickTime] [datetime] NOT NULL,
+	[tickMicroTime] [decimal](6, 6) NOT NULL,
+	[exchangeId] [smallint] NOT NULL,
+	[symbol] [varchar](50) NOT NULL,
+	[identifier] [varchar](15) NOT NULL,
+	[currency] [char](3) NOT NULL,
+	[lastQty] [int] NOT NULL,
+	[lastPrice] [decimal](14, 4) NOT NULL,
+	[bidQty] [int] NOT NULL,
+	[bidPrice] [decimal](14, 4) NOT NULL,
+	[askQty] [int] NOT NULL,
+	[askPrice] [decimal](14, 4) NOT NULL,
+	[totalVolume] [int] NOT NULL,
+	[phaseId] [tinyint] NOT NULL
+) ON [PRIMARY]
+END
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[{$table}]') AND name = N'idx_time')
+CREATE CLUSTERED INDEX [idx_time] ON [dbo].[{$table}]
+(
+	[tickTime] ASC,
+	[tickMicroTime] ASC
+)WITH (PAD_INDEX  = OFF, IGNORE_DUP_KEY = OFF) ON [PRIMARY]
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[{$table}]') AND name = N'idx_identifier')
+CREATE NONCLUSTERED INDEX [idx_exchange_symbol] ON [dbo].[{$table}]
+(
+	[identifier] ASC
+)WITH (PAD_INDEX  = OFF, IGNORE_DUP_KEY = OFF) ON [PRIMARY]
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[{$table}]') AND name = N'idx_symbol')
+CREATE NONCLUSTERED INDEX [idx_symbol] ON [dbo].[{$table}]
+(
+	[symbol] ASC
+)WITH (PAD_INDEX  = OFF, IGNORE_DUP_KEY = OFF) ON [PRIMARY]
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[{$table}]') AND name = N'idx_time_symbol')
+CREATE NONCLUSTERED INDEX [idx_symbol] ON [dbo].[{$table}]
+(
+	[tickTime] ASC,
+	[tickMicroTime] ASC,
+	[symbol] ASC
+)WITH (PAD_INDEX  = OFF, IGNORE_DUP_KEY = OFF) ON [PRIMARY]
+
+EOT;
+		}
+
 
 	}
 
