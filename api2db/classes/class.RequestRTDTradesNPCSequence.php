@@ -31,19 +31,19 @@ class CRequestRTDTradesNPCSequence extends CRequestRTD {
 		if(!isset($this->aaSettings["SEQUENCE"]["NEXTID"]))
 		{
 			wlog(get_class($this), "E  Arggghhhh Sequence settings not found in INI file!!! Blowing up ungracefully...");
-			unset($this);
+			exit(-1);
 		}
     // Check Sequence settings
-		if(!isset($this->aaSettings["SEQUENCE"]["SOURCENAME"], $this->aaSettings["SEQUENCE"]["NEXTID"], $this->aaSettings["SEQUENCE"]["TRADE"]))
+		if(!isset($this->aaSettings["WEBPL"]["SOURCENAME"], $this->aaSettings["WEBPL"]["TRADE"]))
 		{
-			wlog(get_class($this), "E  Arggghhhh Sequence settings not found in INI file!!! Blowing up ungracefully...");
-			unset($this);
+			wlog(get_class($this), "E  Arggghhhh WebPL settings not found in INI file!!! Blowing up ungracefully...");
+			exit(-1);
 		}
 		// Check RTD settings
 		if(!isset($this->aaSettings["RTDHOST"]["IP"],	$this->aaSettings["RTDHOST"]["PORT"]))
 		{
 			wlog(get_class($this), "E  Arggghhhh RTDHOST settings not found in INI file!!! Blowing up ungracefully...");
-			unset($this);
+			exit(-1);
 		}
 	}
 
