@@ -33,6 +33,7 @@ namespace TCPClientApp
             this.button3 = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // button1
@@ -81,11 +82,20 @@ namespace TCPClientApp
             this.label2.Size = new System.Drawing.Size(0, 13);
             this.label2.TabIndex = 4;
             // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(57, 176);
+            this.textBox1.Multiline = true;
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(549, 139);
+            this.textBox1.TabIndex = 5;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(485, 137);
+            this.ClientSize = new System.Drawing.Size(673, 337);
+            this.Controls.Add(this.textBox1);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.button3);
@@ -105,6 +115,7 @@ namespace TCPClientApp
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.TextBox textBox1;
     }
 }
 

@@ -15,7 +15,7 @@ namespace TCPServer
     public partial class Form1 : Form
     {
         TcpListener listener = null;
-
+        
         public Form1()
         {
             IPAddress localAddr = IPAddress.Parse("127.0.0.1");
@@ -51,12 +51,18 @@ namespace TCPServer
         {
             if (bStarted)
             {
-                if (sockToClient.Connected)
+                if (listenerThread != null)
                 {
                     streamOut.Close();
                     streamIn.Close();
                     networkStream.Close();
-                    sockToClient.Close();
+                }
+                if (sockToClient != null)
+                {
+                    if (sockToClient.Connected)
+                    {
+                        sockToClient.Close();
+                    }
                 }
             }
             bStarted = false;
