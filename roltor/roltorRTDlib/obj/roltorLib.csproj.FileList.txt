@@ -1,5 +1,0 @@
-obj\Debug\ResolveAssemblyReference.cache
-bin\Debug\roltorLib.dll
-bin\Debug\roltorLib.pdb
-obj\Debug\roltorLib.dll
-obj\Debug\roltorLib.pdb

@@ -69,7 +69,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\roltorRTDlib\RoltorLib.csproj">
+    <ProjectReference Include="..\roltorLib\RoltorLib.csproj">
       <Project>{13C499DD-3E2C-446D-901E-F9A4E66AD5A2}</Project>
       <Name>RoltorLib</Name>
     </ProjectReference>
