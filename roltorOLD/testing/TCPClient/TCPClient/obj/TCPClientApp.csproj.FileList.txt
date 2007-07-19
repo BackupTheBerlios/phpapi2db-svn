@@ -1,8 +1,0 @@
-obj\Debug\ResolveAssemblyReference.cache
-obj\Debug\TCPClientApp.Form1.resources
-obj\Debug\TCPClientApp.Properties.Resources.resources
-obj\Debug\TCPClientApp.csproj.GenerateResource.Cache
-bin\Debug\TCPClientApp.exe
-bin\Debug\TCPClientApp.pdb
-obj\Debug\TCPClientApp.exe
-obj\Debug\TCPClientApp.pdb
