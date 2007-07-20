@@ -39,7 +39,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Applications\ClientLibs\VDMERLib\Source\VDMERLib.csproj">
+    <ProjectReference Include="..\VDMERLib\Source\VDMERLib.csproj">
       <Project>{BF1ABE04-6C52-4000-B1A3-E6CBDE2899AA}</Project>
       <Name>VDMERLib</Name>
     </ProjectReference>
