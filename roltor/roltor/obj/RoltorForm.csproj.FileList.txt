@@ -1,0 +1,15 @@
+obj\Debug\ResolveAssemblyReference.cache
+obj\Debug\RoltorForm.Form1.resources
+obj\Debug\RoltorForm.Properties.Resources.resources
+obj\Debug\RoltorForm.csproj.GenerateResource.Cache
+bin\Debug\RoltorForm.exe
+bin\Debug\RoltorForm.pdb
+bin\Debug\roltorLib.dll
+bin\Debug\roltorLib.pdb
+obj\Debug\RoltorForm.exe
+obj\Debug\RoltorForm.pdb
+bin\Debug\Interop.EASYROUTERCOMCLIENTLib.dll
+bin\Debug\VDMERLib.dll
+bin\Debug\Interop.MESSAGEFIX3Lib.dll
+bin\Debug\VDMERLib.pdb
+bin\Debug\VDMERLib.xml

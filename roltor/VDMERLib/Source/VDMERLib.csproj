@@ -1,0 +1,128 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{BF1ABE04-6C52-4000-B1A3-E6CBDE2899AA}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>VDMERLib</RootNamespace>
+    <AssemblyName>VDMERLib</AssemblyName>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <SignAssembly>false</SignAssembly>
+    <AssemblyOriginatorKeyFile>VDMERLib.pfx</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\VDMERLib.XML</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\VDMERLib.XML</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Database\DataAccess\CustomAccess.cs" />
+    <Compile Include="EasyRouter\Base.cs" />
+    <Compile Include="EasyRouter\Definitions.cs" />
+    <Compile Include="EasyRouter\EasyRouterClient\ERCSFIXClient.cs" />
+    <Compile Include="EasyRouter\General\IProfile.cs" />
+    <Compile Include="EasyRouter\General\Profile.cs" />
+    <Compile Include="EasyRouter\User\ESUser.cs" />
+    <Compile Include="EasyRouter\User\TickerDefaults.cs" />
+    <Compile Include="Database\Constants.cs" />
+    <Compile Include="Database\DataReader.cs" />
+    <Compile Include="Database\IStoredProcedure.cs" />
+    <Compile Include="Database\SQLServer\ABCStoredProcedure.cs" />
+    <Compile Include="Database\SQLServer\BulkInsert.cs" />
+    <Compile Include="EasyRouter\General\Logon.cs" />
+    <Compile Include="EasyRouter\EasyRouterClient\Data\ComponentStatusArgs.cs" />
+    <Compile Include="EasyRouter\EasyRouterClient\ERCSClient.cs" />
+    <Compile Include="EasyRouter\General\GeneralMsgEventArg.cs" />
+    <Compile Include="EasyRouter\Logging\Debug.cs" />
+    <Compile Include="EasyRouter\Logging\LogFile.cs" />
+    <Compile Include="EasyRouter\Orders\OrdersAtPrice.cs" />
+    <Compile Include="EasyRouter\Prices\PriceManagement.cs" />
+    <Compile Include="EasyRouter\Risk\Account.cs" />
+    <Compile Include="EasyRouter\Risk\AccountManager.cs" />
+    <Compile Include="EasyRouter\Risk\Allocation.cs" />
+    <Compile Include="EasyRouter\Risk\Position.cs" />
+    <Compile Include="EasyRouter\Risk\RiskEventArg.cs" />
+    <Compile Include="EasyRouter\Structure\Commodity.cs" />
+    <Compile Include="EasyRouter\Structure\CommoditySymbol.cs" />
+    <Compile Include="EasyRouter\Structure\ESExchange.cs" />
+    <Compile Include="EasyRouter\Structure\InstrumentManager.cs" />
+    <Compile Include="EasyRouter\Structure\StructureDataEventArg.cs" />
+    <Compile Include="EasyRouter\Structure\SecurityExchange.cs" />
+    <Compile Include="EasyRouter\Structure\TEInstrument.cs" />
+    <Compile Include="EasyRouter\Prices\TradeData.cs" />
+    <Compile Include="EasyRouter\Prices\PricesEventArg.cs" />
+    <Compile Include="EasyRouter\Prices\SecurityStatus.cs" />
+    <Compile Include="EasyRouter\Orders\OrderInfo.cs" />
+    <Compile Include="EasyRouter\Orders\OrderDataEventArg.cs" />
+    <Compile Include="EasyRouter\Orders\OrderHistory.cs" />
+    <Compile Include="EasyRouter\Orders\OrderManagement.cs" />
+    <Compile Include="EasyRouter\Orders\TradeInfo.cs" />
+    <Compile Include="EasyRouter\Orders\TradeLegs.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="EasyRouter\TCP\Client.cs" />
+    <Compile Include="EasyRouter\TCP\ClientReader.cs" />
+    <Compile Include="EasyRouter\TCP\ConnectionEventArgs.cs" />
+    <Compile Include="EasyRouter\TCP\FIXMessageEventArgs.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="EASYROUTERCOMCLIENTLib">
+      <Guid>{B4318383-87C2-40BB-9400-A153277CEE71}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+    </COMReference>
+    <COMReference Include="MESSAGEFIX3Lib">
+      <Guid>{D4261EFB-2F6F-45A2-BB7B-564EC0B08766}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+    </COMReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="VDMERLib.pfx" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\licenses.licx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Database\Data\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

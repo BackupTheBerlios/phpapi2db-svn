@@ -1,0 +1,11 @@
+bin\Debug\VDMERLib.dll
+bin\Debug\VDMERLib.pdb
+bin\Debug\Interop.EASYROUTERCOMCLIENTLib.dll
+bin\Debug\Interop.MESSAGEFIX3Lib.dll
+obj\Debug\ResolveAssemblyReference.cache
+obj\Debug\Interop.EASYROUTERCOMCLIENTLib.dll
+obj\Debug\Interop.MESSAGEFIX3Lib.dll
+obj\Debug\VDMERLib.csproj.ResolveComReference.cache
+obj\Debug\VDMERLib.dll
+obj\Debug\VDMERLib.pdb
+obj\Debug\VDMERLib.dll.licenses
