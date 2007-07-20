@@ -51,7 +51,10 @@ namespace VDMERLib.EasyRouter.Structure
         /// <summary>
         /// Commodity symbol
         /// </summary>
-        public string CommoditySymbolCode { get { return m_sSymbol; } }
+        public string CommoditySymbolCode { 
+            get { return m_sSymbol; } 
+            set { m_sSymbol = value; }
+        }
 
         /// <summary>
         /// Commodity Symbol Desc
@@ -61,7 +64,10 @@ namespace VDMERLib.EasyRouter.Structure
         /// <summary>
         /// Commodity symbol
         /// </summary>
-        public string CommodityDesc { get { return m_sCommodityDesc; } }
+        public string CommodityDesc {
+            get { return m_sCommodityDesc; } 
+            set { m_sCommodityDesc = value; } 
+        }
 
 
         /// <summary>

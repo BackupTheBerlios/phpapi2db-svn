@@ -22,7 +22,7 @@ using System.Collections;
 using MESSAGEFIX3Lib;
 using EASYROUTERCOMCLIENTLib;
 
-namespace VDMERLib.EasyRouter.OldAccount
+namespace VDMERLib.EasyRouter.User
 {
     /// <summary>
     /// Class TickerDefaults

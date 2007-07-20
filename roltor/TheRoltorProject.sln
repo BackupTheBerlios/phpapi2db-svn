@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual Studio 2005
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoltorForm", "RoltorForm.csproj", "{6143B987-B25F-4291-9DA8-58B41BE67DD7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoltorForm", "roltor\RoltorForm.csproj", "{6143B987-B25F-4291-9DA8-58B41BE67DD7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoltorLib", "..\roltorLib\RoltorLib.csproj", "{13C499DD-3E2C-446D-901E-F9A4E66AD5A2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoltorLib", "roltorLib\RoltorLib.csproj", "{13C499DD-3E2C-446D-901E-F9A4E66AD5A2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VDMERLib", "..\VDMERLib\Source\VDMERLib.csproj", "{BF1ABE04-6C52-4000-B1A3-E6CBDE2899AA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VDMERLib", "VDMERLib\Source\VDMERLib.csproj", "{BF1ABE04-6C52-4000-B1A3-E6CBDE2899AA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

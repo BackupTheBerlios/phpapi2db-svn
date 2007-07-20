@@ -23,7 +23,7 @@ namespace VDMERLib.EasyRouter.General
             get;
         }
 
-        string InstanceID
+        int? InstanceID
         {
             get;
             set;

@@ -60,7 +60,11 @@ namespace VDMERLib.EasyRouter.Structure
         /// <summary>
         /// ES Exchange Description
         /// </summary>
-        public string ESExchangeDesc { get { return m_sESExchangeDesc; } }
+        public string ESExchangeDesc {  
+            get { return m_sESExchangeDesc; }
+            set { m_sESExchangeDesc = value; }
+
+        }
 
         /// <summary>
         /// Have we subscribed 
@@ -79,6 +83,13 @@ namespace VDMERLib.EasyRouter.Structure
             m_ESExchange = sESExchange;
             m_sESExchangeDesc = sExchangeDesc;
             m_Exchange = exchange; 
+        }
+
+        public void Update(string sESExchange, string sExchangeDesc, SecurityExchange exchange)
+        {
+            m_ESExchange = sESExchange;
+            m_sESExchangeDesc = sExchangeDesc;
+            m_Exchange = exchange;
         }
 
         /// <summary>
@@ -125,6 +136,11 @@ namespace VDMERLib.EasyRouter.Structure
             if (m_ESCommodityMap.ContainsKey(sCommdity))
             {
                 commodity = (Commodity)m_ESCommodityMap[sCommdity];
+            }
+            else
+            {
+                commodity = new Commodity(sCommdity, this);
+                m_ESCommodityMap[sCommdity] = commodity;
             }
             return commodity;
         }

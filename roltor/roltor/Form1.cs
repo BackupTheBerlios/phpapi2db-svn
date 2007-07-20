@@ -21,7 +21,6 @@ namespace RoltorForm
         }
 
 
-
         private void buttonRTDConnect_Click(object sender, EventArgs e)
         {
             if (myRoltor.Connect())
@@ -79,9 +78,19 @@ namespace RoltorForm
 
         #region IExecute Members
 
-        public void PlaceOrder(OrderStruct order)
+        public void AddOrder(OrderStruct order)
         {
             this.Invoke(new Roltor.BoolFunction(myRoltor.AddOrderOlt), new object[] { order });
+        }
+
+        public void ChangeOrder(OrderStruct order)
+        {
+            this.Invoke(new Roltor.BoolFunction(myRoltor.ChangeOrderOlt), new object[] { order });
+        }
+
+        public void PullOrder(OrderStruct order)
+        {
+            this.Invoke(new Roltor.BoolFunction(myRoltor.PullOrderOlt), new object[] { order });
         }
 
         #endregion

@@ -52,6 +52,7 @@
     <Compile Include="EasyRouter\EasyRouterClient\ERCSFIXClient.cs" />
     <Compile Include="EasyRouter\General\IProfile.cs" />
     <Compile Include="EasyRouter\General\Profile.cs" />
+    <Compile Include="EasyRouter\General\ProfileMsgEventArgs.cs" />
     <Compile Include="EasyRouter\User\ESUser.cs" />
     <Compile Include="EasyRouter\User\TickerDefaults.cs" />
     <Compile Include="Database\Constants.cs" />

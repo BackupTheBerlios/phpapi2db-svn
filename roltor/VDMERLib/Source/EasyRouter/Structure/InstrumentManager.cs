@@ -161,7 +161,11 @@ namespace VDMERLib.EasyRouter.Structure
             SecurityExchange exchange = null;
             if (m_InstrumentMap.ContainsKey(sKey))
             {
-                exchange = (SecurityExchange)m_InstrumentMap[sKey]; 
+                exchange = (SecurityExchange)m_InstrumentMap[sKey];
+            }
+            else
+            {
+                exchange = AddExchange(sKey, sKey);
             }
             return exchange;
         }
@@ -210,8 +214,9 @@ namespace VDMERLib.EasyRouter.Structure
                 System.Diagnostics.Debug.WriteLine("SEC DEF V EXCHANGE = " + sExchange + " ESEXCHANGE = " + sESExchange);
 #endif
                 SecurityExchange exchange = GetExchange(sExchange);
-                if (exchange != null)
-                    esExchange = exchange.AddESExchange(sESExchange, sExchangeDesc);
+               
+                esExchange = exchange.AddESExchange(sESExchange, sExchangeDesc);
+                
             }
             return esExchange;
         }
@@ -274,7 +279,7 @@ namespace VDMERLib.EasyRouter.Structure
                         if (instrument.m_sMDExchange.Length > 0 & instrument.m_sSecurityID.Length > 0)
                         { 
                             string sTempSymbol = instrument.m_sSecurityID + instrument.m_sMDExchange;
-                            if (m_directISINMap.ContainsKey(sTempSymbol))
+                            if (!m_directISINMap.ContainsKey(sTempSymbol))
                                 m_directISINMap[sTempSymbol] = instrument; 
                         }
                     }
@@ -346,7 +351,8 @@ namespace VDMERLib.EasyRouter.Structure
             SecurityExchange exchange = null;
             if(m_InstrumentMap.ContainsKey(sExchange))
             {
-                exchange = (SecurityExchange)m_InstrumentMap[sExchange]; 
+                exchange = (SecurityExchange)m_InstrumentMap[sExchange];
+                exchange.ExchangeDesc = sDescription;
             }
             else
             {

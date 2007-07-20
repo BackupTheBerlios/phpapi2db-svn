@@ -349,7 +349,7 @@ If booking price, fees, provision, courtage are not 0 the corresponding currency
                     if (BadHackFilter(order))
                     {
                         //System.Diagnostics.Debug.WriteLine("Order " + order.OrderID + " found,ACC=" + order.Text + ",CTR=" + order.ContractID);
-                        myRoltor.UpdateOrder(order.OrderID, order);
+                        myRoltor.IncomingRTDOrderEvent(order.OrderID, order);
                     }
 
                     break;

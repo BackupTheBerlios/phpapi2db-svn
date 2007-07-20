@@ -144,7 +144,15 @@ namespace VDMERLib.EasyRouter.EasyRouterClient
         /// <param name="from"></param>
         /// <param name="args"></param>
         public delegate void RecvRiskMsg(object from, RiskEventArg args);
-        
+
+
+        /// <summary>
+        /// Profile Message
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="args"></param>
+        public delegate void RecvProfileMsg(object from, ProfileMsgEventArgs args);
+
         /// <summary>
         /// request ESSxchange
         /// </summary>
@@ -184,6 +192,11 @@ namespace VDMERLib.EasyRouter.EasyRouterClient
         /// Eventing risk messages
         /// </summary>
         public event RecvRiskMsg RecvRiskMsgEvent;
+
+        /// <summary>
+        /// Eventing profile messages
+        /// </summary>
+        public event RecvProfileMsg RecvProfileMsgEvent;
 
         /// <summary>
         /// Set DSN to use for custon tick data
@@ -562,12 +575,35 @@ namespace VDMERLib.EasyRouter.EasyRouterClient
         {
             try
             {
+                string[] arrNames;
+                object objProfileNames, objForms, objUIDs, objSettings;
                 string strSettings;
-                m_Router.GetProfileEntry("SYSTEM", "0", "0", out strSettings);
+                
+                m_Router.GetProfileNames(out objProfileNames);
+                
+                m_Router.GetProfile("DEFAULT", out objForms, out objUIDs, out objSettings);
+                if (objForms != null)
+                {
+                    string[] strForms = (string[])objForms;
+                    for (int iCount = 0; iCount < strForms.Length; iCount++)
+                    {
+                        if (RecvProfileMsgEvent != null)
+                        {
+                            ProfileMsgEventArgs ProfileArgs = new ProfileMsgEventArgs();
+                            ProfileArgs.ScreenID = (ScreenIDs)Int32.Parse(strForms[iCount]);
+                            ProfileArgs.Profile = ((string[])objSettings)[iCount];
+                            ProfileArgs.InstanceID = Int32.Parse(((string[])objUIDs)[iCount]);
+                            RecvProfileMsgEvent(this, ProfileArgs);
+                        }
+                    }
+                }
+
+                m_Router.GetProfileEntry("SYSTEM", "0", "0", out strSettings);              
+
                 if (strSettings.Length == 0)
                     return false;
 
-                Accounts.Allocations.Add(new Allocation("Temp"));
+                Accounts.Allocations.Add(new Allocation("New Allocation"));
                 bool bSucceeded = true;
                 XmlReader rd = XmlReader.Create(new StringReader(strSettings));
                 rd.Read(); //Start Document
@@ -679,12 +715,18 @@ namespace VDMERLib.EasyRouter.EasyRouterClient
                     RecvStructuredMsgEvent(this, esexchange);
 
                 if (esexchange != null)
-                    if (esexchange.Subscribed == false )
+                {
+                    if (m_bEnableAutoSubcription)
                     {
-                        RequestStructure(sExchange, sESExchange);
-                        m_subscriptionMap.Add(sExchange+sESExchange,null);
-                        esexchange.Subscribed = true;
+                        if (esexchange.Subscribed == false)
+                        {
+                            RequestStructure(sExchange, sESExchange);
+                            m_subscriptionMap.Add(sExchange + sESExchange, null);
+                            esexchange.Subscribed = true;
+                        }
                     }
+                }
+               
             }
             else if (sType == MESSAGEFIX3Lib.FIXSecurityResponseTypeConstants.esFIXSecurityResponseTypeReturnSecurityExchanges)
             { 
@@ -829,6 +871,7 @@ namespace VDMERLib.EasyRouter.EasyRouterClient
         /// </summary>
         public void Logoff()
         {
+            m_Router.CommitProfiles(); 
             m_subscriptionMap.Clear();
             m_Router.SendLogout(); 
         }
@@ -901,14 +944,10 @@ namespace VDMERLib.EasyRouter.EasyRouterClient
         public bool SubscribeTE(string sTEMnemonic)
         {
             TEInstrument instrument = (TEInstrument)m_InstrumentManager.GetDirectTE(sTEMnemonic);
-            if (instrument != null)
-            {
-                return m_Router.SendMarketDataRequest(sTEMnemonic.Substring(0, 1), sTEMnemonic, EFIXValueSubscriptionRequestType.eSubscriptionSubscribe, SubscribeAll);
-            }
-            else
-            {
-                return false;
-            }
+            if (instrument == null)
+                RequestData(sTEMnemonic);
+            
+            return m_Router.SendMarketDataRequest(sTEMnemonic.Substring(0, 1), sTEMnemonic, EFIXValueSubscriptionRequestType.eSubscriptionSubscribe, SubscribeAll);
         }
         
         /// <summary>
@@ -1311,6 +1350,20 @@ namespace VDMERLib.EasyRouter.EasyRouterClient
         public void RemovePersistedClass(IProfile clsProfile)
         {
             m_PersistedClasses.Remove(clsProfile.FormName);
+        }
+
+        public void WriteProfile(IProfile clsProfile)
+        {
+            StringBuilder theString = new StringBuilder();
+            XmlWriter ProfileSettings = XmlWriter.Create(theString);
+
+            ProfileSettings.WriteStartDocument();
+            clsProfile.WriteProperties(ProfileSettings);
+            ProfileSettings.WriteEndDocument();
+            ProfileSettings.Flush();
+            if (!clsProfile.InstanceID.HasValue)
+                clsProfile.InstanceID = Environment.TickCount;
+            m_Router.SetProfileEntry("DEFAULT", ((int)clsProfile.ScreenID).ToString(), clsProfile.InstanceID.ToString(), theString.ToString());
         }
     }
 }

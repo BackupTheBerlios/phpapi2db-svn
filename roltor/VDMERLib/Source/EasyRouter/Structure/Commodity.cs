@@ -81,7 +81,7 @@ namespace VDMERLib.EasyRouter.Structure
         /// <returns></returns>
         public CommoditySymbol GetCommoditySymbol(string sSymbol)
         {
-            return GetCommoditySymbol(sSymbol,"",false);
+            return GetCommoditySymbol(sSymbol, sSymbol, false);
         }
         
         /// <summary>
@@ -97,14 +97,17 @@ namespace VDMERLib.EasyRouter.Structure
             if (m_ESCommoditySymbolMap.ContainsKey(sSymbol))
             {
                 commoditysymbol = (CommoditySymbol)m_ESCommoditySymbolMap[sSymbol];
+                if (bAdded)
+                {
+                    commoditysymbol.CommoditySymbolCode = sSymbol;
+                    commoditysymbol.CommodityDesc = sCommodityDesc;
+                }
+                    
             }
             else
             {
-                if (bAdded)
-                {
-                    commoditysymbol = new CommoditySymbol(sSymbol, sCommodityDesc,this);
-                    m_ESCommoditySymbolMap[sSymbol] = commoditysymbol;
-                }
+                commoditysymbol = new CommoditySymbol(sSymbol, sCommodityDesc,this);
+                m_ESCommoditySymbolMap[sSymbol] = commoditysymbol;
             }
             return commoditysymbol;
         }

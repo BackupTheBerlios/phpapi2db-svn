@@ -35,7 +35,7 @@ namespace VDMERLib.EasyRouter.Risk
             get { return ScreenIDs.Allocation; }
         }
 
-        public string InstanceID
+        public int? InstanceID
         {
             get
             {

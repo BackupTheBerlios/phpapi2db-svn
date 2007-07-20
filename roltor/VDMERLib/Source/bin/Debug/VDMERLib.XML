@@ -829,6 +829,11 @@
             Eventing risk messages
             </summary>
         </member>
+        <member name="E:VDMERLib.EasyRouter.EasyRouterClient.ERCSClient.RecvProfileMsgEvent">
+            <summary>
+            Eventing profile messages
+            </summary>
+        </member>
         <member name="P:VDMERLib.EasyRouter.EasyRouterClient.ERCSClient.EnableAutoSubscription">
             <summary>
             if true will auto subcrible to all tradeble instruments - can be time consuming 
@@ -902,6 +907,13 @@
         <member name="T:VDMERLib.EasyRouter.EasyRouterClient.ERCSClient.RecvRiskMsg">
             <summary>
             Risk Msg
+            </summary>
+            <param name="from"></param>
+            <param name="args"></param>
+        </member>
+        <member name="T:VDMERLib.EasyRouter.EasyRouterClient.ERCSClient.RecvProfileMsg">
+            <summary>
+            Profile Message
             </summary>
             <param name="from"></param>
             <param name="args"></param>

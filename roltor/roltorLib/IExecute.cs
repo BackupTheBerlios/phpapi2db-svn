@@ -7,7 +7,11 @@ namespace RoltorLib
     public interface IExecute
     {
        
-        void PlaceOrder(OrderStruct order);
+        void AddOrder(OrderStruct order);
+
+        void ChangeOrder(OrderStruct order);
+
+        void PullOrder(OrderStruct order);
                 
     }
 }

@@ -4,84 +4,576 @@
         <name>VDMERLib</name>
     </assembly>
     <members>
-        <member name="T:VDMERLib.EasyRouter.TCP.ClientReader">
+        <member name="T:VDMERLib.EasyRouter.TCP.ConnectionEventArgs">
             <summary>
-            Class ClientReader
+            Class ConnectionEventArgs
             </summary>
         </member>
-        <member name="F:VDMERLib.EasyRouter.TCP.ClientReader.m_bContinue">
+        <member name="F:VDMERLib.EasyRouter.TCP.ConnectionEventArgs.m_State">
             <summary>
-            true for thread loop
+            tcp connection state
             </summary>
         </member>
-        <member name="F:VDMERLib.EasyRouter.TCP.ClientReader.m_StreamIn">
+        <member name="M:VDMERLib.EasyRouter.TCP.ConnectionEventArgs.#ctor(VDMERLib.EasyRouter.TCP.Client.State)">
             <summary>
-            data input stream
+            constructor for connection event 
+            </summary>
+            <param name="state"></param>
+        </member>
+        <member name="P:VDMERLib.EasyRouter.TCP.ConnectionEventArgs.ConnectionState">
+            <summary>
+            get the current connectin state
             </summary>
         </member>
-        <member name="F:VDMERLib.EasyRouter.TCP.ClientReader.m_ReaderThread">
+        <member name="T:VDMERLib.EasyRouter.Risk.RiskEventArg">
             <summary>
-            Reader thread for data from tcp server 
+            PricesEventArg
             </summary>
         </member>
-        <member name="F:VDMERLib.EasyRouter.TCP.ClientReader.m_sDelimiter">
+        <member name="F:VDMERLib.EasyRouter.Risk.RiskEventArg.m_RiskType">
             <summary>
-            SOH character used to parse FIX string 
+            Risk type
             </summary>
         </member>
-        <member name="F:VDMERLib.EasyRouter.TCP.ClientReader.m_sTCPBuffer">
+        <member name="M:VDMERLib.EasyRouter.Risk.RiskEventArg.#ctor(VDMERLib.EasyRouter.Risk.RiskEventArg.RiskDataType)">
             <summary>
-            DataReader
+            Constructor
+            </summary>
+            <param name="type"></param>
+        </member>
+        <member name="M:VDMERLib.EasyRouter.Risk.RiskEventArg.#ctor">
+            <summary>
+            Vanilla
             </summary>
         </member>
-        <member name="M:VDMERLib.EasyRouter.TCP.ClientReader.#ctor(System.IO.StreamReader)">
+        <member name="P:VDMERLib.EasyRouter.Risk.RiskEventArg.DataType">
             <summary>
-            vanilla constuctor - take in the read stream from TCP server
-            </summary>
-            <param name="streamIn"></param>
-        </member>
-        <member name="M:VDMERLib.EasyRouter.TCP.ClientReader.ReadStream">
-            <summary>
-            Function to process data off the tcp stream - called from the worker thread
+            Data type
             </summary>
         </member>
-        <member name="M:VDMERLib.EasyRouter.TCP.ClientReader.Start">
+        <member name="T:VDMERLib.EasyRouter.Risk.RiskEventArg.RiskDataType">
             <summary>
-            Start the reading thread - process data off tcp strem in
+            PriceDataType
             </summary>
         </member>
-        <member name="M:VDMERLib.EasyRouter.TCP.ClientReader.Stop">
+        <member name="F:VDMERLib.EasyRouter.Risk.RiskEventArg.RiskDataType.Account">
             <summary>
-            Stop the worker thread , processing the tcp server data 
+            account level
             </summary>
         </member>
-        <member name="E:VDMERLib.EasyRouter.TCP.ClientReader.DataEvent">
+        <member name="F:VDMERLib.EasyRouter.Risk.RiskEventArg.RiskDataType.Position">
+             <summary>
+            position level
+             </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.Risk.Position.m_sSymbol">
             <summary>
-            connection event 
+            ES Ticker Mnemonic
             </summary>
         </member>
-        <member name="E:VDMERLib.EasyRouter.TCP.ClientReader.DisconnectEvent">
+        <member name="M:VDMERLib.EasyRouter.Risk.Position.DecodeFIXGroup(MESSAGEFIX3Lib.IFIXGroup)">
             <summary>
-            connection event 
+            Decode position FIX message
+            </summary>
+            <param name="FIXGroup"></param>
+            <returns></returns>
+        </member>
+        <member name="P:VDMERLib.EasyRouter.Risk.Position.PAL">
+            <summary>
+            PAL
             </summary>
         </member>
-        <member name="P:VDMERLib.EasyRouter.TCP.ClientReader.Delimiter">
+        <member name="P:VDMERLib.EasyRouter.Risk.Position.RoundTrips">
             <summary>
-            Returns the SOH delimiter for fix message
+            Round Trips
             </summary>
         </member>
-        <member name="T:VDMERLib.EasyRouter.TCP.ClientReader.EventFIXMessage">
+        <member name="P:VDMERLib.EasyRouter.Risk.Position.NumberFills">
             <summary>
-            event delegate
+            NumberFills
             </summary>
-            <param name="from"></param>
-            <param name="args"></param>
         </member>
-        <member name="T:VDMERLib.EasyRouter.TCP.ClientReader.EventDisconnectMessage">
+        <member name="P:VDMERLib.EasyRouter.Risk.Position.NetPosition">
             <summary>
-            event delegate
+            Net Position
             </summary>
-            <param name="args"></param>
+        </member>
+        <member name="P:VDMERLib.EasyRouter.Risk.Position.Symbol">
+            <summary>
+            ES Ticker Mnemonic
+            </summary>
+        </member>
+        <member name="P:VDMERLib.EasyRouter.Risk.Position.AccountID">
+            <summary>
+            AccountID
+            </summary>
+        </member>
+        <member name="T:VDMERLib.EasyRouter.Orders.OrderHistory">
+            <summary>
+            Class OrderHistory
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.Orders.OrderHistory.m_OrderHistory">
+            <summary>
+            Order History - stores a list of Trade and Order information
+            </summary>
+        </member>
+        <member name="M:VDMERLib.EasyRouter.Orders.OrderHistory.#ctor(VDMERLib.EasyRouter.Orders.OrderInfo)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="firstOrder"></param>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.Orders.OrderHistory.m_CurrentOrder">
+            <summary>
+            This Order  object stores the current order state from the updated order and trade messages 
+            </summary>
+        </member>
+        <member name="M:VDMERLib.EasyRouter.Orders.OrderHistory.UpdateOrder(VDMERLib.EasyRouter.Orders.OrderInfo)">
+            <summary>
+            Update the current order with the FIX message trade or order update
+            </summary>
+            <param name="order"></param>
+        </member>
+        <member name="P:VDMERLib.EasyRouter.Orders.OrderHistory.CurrentOrder">
+            <summary>
+            Pbulic property to get the Order object that stores the current order state from the updated order and trade messages 
+            </summary>
+        </member>
+        <member name="P:VDMERLib.EasyRouter.Orders.OrderHistory.Key">
+            <summary>
+            Get the priamry boid - identifier in ER system
+            </summary>
+        </member>
+        <member name="T:VDMERLib.EasyRouter.Structure.Commodity">
+            <summary>
+            Class Commodity
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.Structure.Commodity.m_ESExchange">
+            <summary>
+            link to the EXExchange this commodity belongs to
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.Structure.Commodity.m_ESCommoditySymbolMap">
+            <summary>
+            map of commodity tye to commodity symbol
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.Structure.Commodity.m_sCommodity">
+            <summary>
+            security type code
+            </summary>
+        </member>
+        <member name="M:VDMERLib.EasyRouter.Structure.Commodity.#ctor(System.String,VDMERLib.EasyRouter.Structure.ESExchange)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="sCommodity"></param>
+            <param name="exchange"></param>
+        </member>
+        <member name="M:VDMERLib.EasyRouter.Structure.Commodity.AddCommoditySymbol(System.String,System.String)">
+            <summary>
+            Add commodity symbol
+            </summary>
+            <param name="sSymbol"></param>
+            <param name="sCommodityDesc"></param>
+            <returns></returns>
+        </member>
+        <member name="M:VDMERLib.EasyRouter.Structure.Commodity.GetCommoditySymbol(System.String)">
+            <summary>
+            get a commodity symbol
+            </summary>
+            <param name="sSymbol"></param>
+            <returns></returns>
+        </member>
+        <member name="M:VDMERLib.EasyRouter.Structure.Commodity.GetCommoditySymbol(System.String,System.String,System.Boolean)">
+            <summary>
+            Generic future to get and add Commodity symbol
+            </summary>
+            <param name="sSymbol"></param>
+            <param name="sCommodityDesc"></param>
+            <param name="bAdded"></param>
+            <returns></returns>
+        </member>
+        <member name="P:VDMERLib.EasyRouter.Structure.Commodity.ESExchangeObj">
+            <summary>
+            link to the EXExchange this commodity belongs to
+            </summary>
+        </member>
+        <member name="P:VDMERLib.EasyRouter.Structure.Commodity.CommodityCode">
+            <summary>
+            security type code
+            </summary>
+        </member>
+        <member name="P:VDMERLib.EasyRouter.Structure.Commodity.Map">
+            <summary>
+            Get the commodity symbol map that is associated to this commodity type
+            </summary>
+        </member>
+        <member name="T:VDMERLib.EasyRouter.General.Logon">
+            <summary>
+            Logon
+            </summary>
+        </member>
+        <member name="T:VDMERLib.EasyRouter.General.GeneralMsgEventArg">
+            <summary>
+            Class GeneralMsgEventArg
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.General.GeneralMsgEventArg.m_Datatype">
+            <summary>
+            get type
+            </summary>
+        </member>
+        <member name="M:VDMERLib.EasyRouter.General.GeneralMsgEventArg.#ctor(VDMERLib.EasyRouter.General.GeneralMsgEventArg.GeneralDataType)">
+            <summary>
+            vanilla
+            </summary>
+            <param name="type"></param>
+        </member>
+        <member name="P:VDMERLib.EasyRouter.General.GeneralMsgEventArg.DataType">
+            <summary>
+            get type
+            </summary>
+        </member>
+        <member name="T:VDMERLib.EasyRouter.General.GeneralMsgEventArg.GeneralDataType">
+            <summary>
+            GeneralDataType
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.General.GeneralMsgEventArg.GeneralDataType.Unknown">
+            <summary>
+            unknown
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.General.GeneralMsgEventArg.GeneralDataType.Login">
+            <summary>
+            login
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.General.Logon.m_bLoginSuccess">
+            <summary>
+            status of logon request
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.General.Logon.m_bLogoff">
+            <summary>
+            status of logoff request
+            </summary>
+        </member>
+        <member name="M:VDMERLib.EasyRouter.General.Logon.#ctor">
+            <summary>
+            Vanilla
+            </summary>
+        </member>
+        <member name="M:VDMERLib.EasyRouter.General.Logon.ToString">
+            <summary>
+            To string 
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:VDMERLib.EasyRouter.General.Logon.LoggedOn">
+            <summary>
+            public property for logon status
+            </summary>
+        </member>
+        <member name="P:VDMERLib.EasyRouter.General.Logon.LoggedOff">
+            <summary>
+            public property for logoff status
+            </summary>
+        </member>
+        <member name="P:VDMERLib.EasyRouter.General.Logon.Error">
+            <summary>
+            Get or Set Error String
+            </summary>
+        </member>
+        <member name="P:VDMERLib.EasyRouter.General.Logon.ErrorCode">
+            <summary>
+            Login Error Codes
+            </summary>
+        </member>
+        <member name="T:VDMERLib.EasyRouter.General.Logon.FailureCodes">
+            <summary>
+            Possible Login Failure Codes
+            </summary>
+        </member>
+        <member name="T:VDMERLib.EasyRouter.Orders.OrderInfo">
+            <summary>
+            Class OrderInfo
+            </summary>
+        </member>
+        <member name="T:VDMERLib.EasyRouter.Orders.OrderDataEventArg">
+            <summary>
+            Class OrderDataEventArg
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.Orders.OrderDataEventArg.m_OrderType">
+            <summary>
+            Type of message
+            </summary>
+        </member>
+        <member name="M:VDMERLib.EasyRouter.Orders.OrderDataEventArg.#ctor(VDMERLib.EasyRouter.Orders.OrderDataEventArg.OrderDataType)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="type"></param>
+        </member>
+        <member name="M:VDMERLib.EasyRouter.Orders.OrderDataEventArg.#ctor">
+            <summary>
+            Vanilla
+            </summary>
+        </member>
+        <member name="P:VDMERLib.EasyRouter.Orders.OrderDataEventArg.DataType">
+            <summary>
+            Get type
+            </summary>
+        </member>
+        <member name="T:VDMERLib.EasyRouter.Orders.OrderDataEventArg.OrderDataType">
+            <summary>
+            OrderDataType
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.Orders.OrderDataEventArg.OrderDataType.Unknown">
+            <summary>
+            unknown
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.Orders.OrderDataEventArg.OrderDataType.Trade">
+            <summary>
+            trade
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.Orders.OrderDataEventArg.OrderDataType.Order">
+            <summary>
+            order
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.Orders.OrderInfo.m_instrument">
+            <summary>
+            Instrument details for this order
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.Orders.OrderInfo.m_dPrice">
+            <summary>
+            price of order
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.Orders.OrderInfo.m_nOrderQty">
+            <summary>
+            total order quantity
+            </summary>
+        </member>
+        <member name="M:VDMERLib.EasyRouter.Orders.OrderInfo.#ctor(System.String)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="instrument"></param>
+            <param name="sTickerMnemonic"></param>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.Orders.OrderInfo.m_sTickerMnemonic">
+            <summary>
+            ES Ticker mnemonic
+            </summary>
+        </member>
+        <member name="M:VDMERLib.EasyRouter.Orders.OrderInfo.#ctor(VDMERLib.EasyRouter.Orders.OrderInfo)">
+            <summary>
+            constructor
+            </summary>
+            <param name="order"></param>
+        </member>
+        <member name="M:VDMERLib.EasyRouter.Orders.OrderInfo.CreateFixMessage(MESSAGEFIX3Lib.FIXMsgConstants)">
+            <summary>
+            Generate a fix message
+            </summary>
+            <param name="MsgType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:VDMERLib.EasyRouter.Orders.OrderInfo.AddConstants(MESSAGEFIX3Lib.FIXMessage)">
+            <summary>
+            Basic defaults that are hard coded and not required
+            </summary>
+            <param name="message"></param>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.Orders.OrderInfo.m_nPrimaryBOID">
+            <summary>
+            ES Primary BOID - ID for order
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.Orders.OrderInfo.m_nSecondBOID">
+            <summary>
+            ES Secondary BOID - ID for order
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.Orders.OrderInfo.m_nLeavesQty">
+            <summary>
+            remaining order quantity
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.Orders.OrderInfo.m_nCumQty">
+            <summary>
+            total traded quantity
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.Orders.OrderInfo.m_sClOrdID">
+            <summary>
+            ES FIX CLORID
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.Orders.OrderInfo.m_sOrdID">
+            <summary>
+            Host Order ID
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.Orders.OrderInfo.m_sExecutionReportStatus">
+            <summary>
+            Status type for the order 
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.Orders.OrderInfo.m_sSide">
+            <summary>
+            Decription of side from MESSAGEFIX3Lib.FIXSideConstants
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.Orders.OrderInfo.m_TransactTime">
+            <summary>
+            Time of transaction
+            </summary>
+        </member>
+        <member name="M:VDMERLib.EasyRouter.Orders.OrderInfo.ApplyChanges(VDMERLib.EasyRouter.Orders.OrderInfo)">
+            <summary>
+            Apply changes from another Order
+            </summary>
+            <param name="order"></param>
+        </member>
+        <member name="M:VDMERLib.EasyRouter.Orders.OrderInfo.ParseFix(EASYROUTERCOMCLIENTLib.IFIXMessage)">
+            <summary>
+            Parse the FIX message for order details
+            </summary>
+            <param name="FIXMsg"></param>
+            <returns></returns>
+        </member>
+        <member name="M:VDMERLib.EasyRouter.Orders.OrderInfo.SetPrice(EASYROUTERCOMCLIENTLib.IFIXMessage)">
+            <summary>
+            Set the order price
+            </summary>
+            <param name="FIXMsg"></param>
+        </member>
+        <member name="M:VDMERLib.EasyRouter.Orders.OrderInfo.SetStatus(EASYROUTERCOMCLIENTLib.IFIXMessage)">
+            <summary>
+            set order status - exec type
+            </summary>
+            <param name="FIXMsg"></param>
+        </member>
+        <member name="M:VDMERLib.EasyRouter.Orders.OrderInfo.ToString">
+            <summary>
+            Order details 
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:VDMERLib.EasyRouter.Orders.OrderInfo.GetExecType(VDMERLib.EasyRouter.Orders.Status)">
+            <summary>
+            Converts Exec Type to friendly description
+            </summary>
+            <param name="sExecType"></param>
+            <returns></returns>
+        </member>
+        <member name="P:VDMERLib.EasyRouter.Orders.OrderInfo.Instrument">
+            <summary>
+            Instrument details for this order
+            </summary>
+        </member>
+        <member name="P:VDMERLib.EasyRouter.Orders.OrderInfo.AvgPx">
+            <summary>
+            Average Price of fills
+            </summary>
+        </member>
+        <member name="P:VDMERLib.EasyRouter.Orders.OrderInfo.Price">
+            <summary>
+            price of order
+            </summary>
+        </member>
+        <member name="P:VDMERLib.EasyRouter.Orders.OrderInfo.OrderQty">
+            <summary>
+            total order quantity
+            </summary>
+        </member>
+        <member name="P:VDMERLib.EasyRouter.Orders.OrderInfo.OrderType">
+             <summary>
+             Order Type
+             </summary>
+            
+        </member>
+        <member name="P:VDMERLib.EasyRouter.Orders.OrderInfo.TimeInForce">
+            <summary>
+            Time in Force
+            </summary>
+        </member>
+        <member name="P:VDMERLib.EasyRouter.Orders.OrderInfo.TickerMnemonic">
+            <summary>
+            ES Ticker mnemonic
+            </summary>
+        </member>
+        <member name="P:VDMERLib.EasyRouter.Orders.OrderInfo.PrimaryBOID">
+            <summary>
+            ES Primary BOID - ID for order
+            </summary>
+        </member>
+        <member name="P:VDMERLib.EasyRouter.Orders.OrderInfo.SecondBOID">
+            <summary>
+            ES Secondary BOID - ID for order
+            </summary>
+        </member>
+        <member name="P:VDMERLib.EasyRouter.Orders.OrderInfo.LeavesQty">
+            <summary>
+            remaining order quantity
+            </summary>
+        </member>
+        <member name="P:VDMERLib.EasyRouter.Orders.OrderInfo.CumQty">
+            <summary>
+            total traded quantity
+            </summary>
+        </member>
+        <member name="P:VDMERLib.EasyRouter.Orders.OrderInfo.ClOrdID">
+            <summary>
+            ES FIX CLORID
+            </summary>
+        </member>
+        <member name="P:VDMERLib.EasyRouter.Orders.OrderInfo.AccountID">
+            <summary>
+            AccountID
+            </summary>
+            
+        </member>
+        <member name="P:VDMERLib.EasyRouter.Orders.OrderInfo.OrdID">
+            <summary>
+            Host Order ID
+            </summary>
+        </member>
+        <member name="P:VDMERLib.EasyRouter.Orders.OrderInfo.ExecutionReportStatus">
+            <summary>
+            Status type for the order 
+            </summary>
+        </member>
+        <member name="P:VDMERLib.EasyRouter.Orders.OrderInfo.Side">
+            <summary>
+            Decription of side from MESSAGEFIX3Lib.FIXSideConstants
+            </summary>
+        </member>
+        <member name="P:VDMERLib.EasyRouter.Orders.OrderInfo.IsBuy">
+            <summary>
+            Only valid if buy and sell are only options
+            </summary>
+        </member>
+        <member name="P:VDMERLib.EasyRouter.Orders.OrderInfo.IsSell">
+            <summary>
+            Only valid if buy and sell are only option
+            </summary>
+        </member>
+        <member name="P:VDMERLib.EasyRouter.Orders.OrderInfo.TransactTime">
+            <summary>
+            Time of transaction
+            </summary>
         </member>
         <member name="T:VDMERLib.EasyRouter.TCP.FIXMessageEventArgs">
             <summary>
@@ -125,346 +617,174 @@
             public property accessor for FIX message type for contained FIX message
             </summary>
         </member>
-        <member name="T:VDMERLib.EasyRouter.Structure.CommoditySymbol">
+        <member name="T:VDMERLib.Database.SQLServer.ABCStoredProcedure">
             <summary>
-            Class CommoditySymbol
+            in development 
             </summary>
         </member>
-        <member name="T:VDMERLib.EasyRouter.Structure.StructureDataEventArg">
+        <member name="F:VDMERLib.Database.SQLServer.ABCStoredProcedure.m_sDSN">
             <summary>
-            StructureDataEventArg
+            Connection string
             </summary>
         </member>
-        <member name="F:VDMERLib.EasyRouter.Structure.StructureDataEventArg.m_Datatype">
+        <member name="F:VDMERLib.Database.SQLServer.ABCStoredProcedure.m_sqlConnection">
             <summary>
-            Data Type
+            Database connection objects
             </summary>
         </member>
-        <member name="M:VDMERLib.EasyRouter.Structure.StructureDataEventArg.#ctor(VDMERLib.EasyRouter.Structure.StructureDataType)">
+        <member name="F:VDMERLib.Database.SQLServer.ABCStoredProcedure.m_sqlCommand">
             <summary>
-            Constructor
-            </summary>
-            <param name="type"></param>
-        </member>
-        <member name="P:VDMERLib.EasyRouter.Structure.StructureDataEventArg.DataType">
-            <summary>
-            Get Type
+            Database Command object
             </summary>
         </member>
-        <member name="F:VDMERLib.EasyRouter.Structure.CommoditySymbol.m_Commodity">
+        <member name="F:VDMERLib.Database.SQLServer.ABCStoredProcedure.m_sStoredProcedureName">
             <summary>
-            Commodity linked to this obejct
+            name of procedure
             </summary>
         </member>
-        <member name="F:VDMERLib.EasyRouter.Structure.CommoditySymbol.m_ESTEMap">
-            <summary>
-            maps commodity symbol to all TE entity for this security type
-            </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.Structure.CommoditySymbol.m_sSymbol">
-            <summary>
-            Commodity Symbol
-            </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.Structure.CommoditySymbol.m_sCommodityDesc">
-            <summary>
-            Commodity Symbol Desc
-            </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.Structure.CommoditySymbol.m_bSubscribed">
-            <summary>
-            Is subscribed
-            </summary>
-        </member>
-        <member name="M:VDMERLib.EasyRouter.Structure.CommoditySymbol.#ctor(System.String,System.String,VDMERLib.EasyRouter.Structure.Commodity)">
-            <summary>
-            constructor
-            </summary>
-            <param name="sSymbol"></param>
-            <param name="sCommodityDesc"></param>
-            <param name="commodity"></param>
-        </member>
-        <member name="M:VDMERLib.EasyRouter.Structure.CommoditySymbol.GetTEInstrument(System.String)">
-            <summary>
-            get TE instrument
-            </summary>
-            <param name="sSymbol"></param>
-            <returns></returns>
-        </member>
-        <member name="M:VDMERLib.EasyRouter.Structure.CommoditySymbol.AddTEInstrument(System.String,EASYROUTERCOMCLIENTLib.IFIXMessage)">
-            <summary>
-             Add new TE if it does not exsit
-            </summary>
-            <param name="sESTickerMnemonic"></param>
-            <param name="FIXMsg"></param>
-            <returns></returns>
-        </member>
-        <member name="M:VDMERLib.EasyRouter.Structure.CommoditySymbol.ToString">
-            <summary>
-            To string
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="P:VDMERLib.EasyRouter.Structure.CommoditySymbol.CommodityObj">
-            <summary>
-            Get Commodity linked to this obejct
-            </summary>
-        </member>
-        <member name="P:VDMERLib.EasyRouter.Structure.CommoditySymbol.CommoditySymbolCode">
-            <summary>
-            Commodity symbol
-            </summary>
-        </member>
-        <member name="P:VDMERLib.EasyRouter.Structure.CommoditySymbol.CommodityDesc">
-            <summary>
-            Commodity symbol
-            </summary>
-        </member>
-        <member name="P:VDMERLib.EasyRouter.Structure.CommoditySymbol.Subscribed">
-            <summary>
-            Accssor for subscription
-            </summary>
-        </member>
-        <member name="P:VDMERLib.EasyRouter.Structure.CommoditySymbol.Map">
-            <summary>
-            Get the TE map
-            </summary>
-        </member>
-        <member name="P:VDMERLib.EasyRouter.Structure.CommoditySymbol.Exchange">
-            <summary>
-            security exchange for the esexchange
-            </summary>
-        </member>
-        <member name="P:VDMERLib.EasyRouter.Structure.CommoditySymbol.ESExchange">
-            <summary>
-            security exchange for the esexchange
-            </summary>
-        </member>
-        <member name="T:VDMERLib.EasyRouter.Prices.TradeData">
-            <summary>
-            Class TradeData
-            </summary>
-        </member>
-        <member name="T:VDMERLib.EasyRouter.Prices.PricesEventArg">
-            <summary>
-            PricesEventArg
-            </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.Prices.PricesEventArg.m_OrderType">
-            <summary>
-            Price type
-            </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.Prices.PricesEventArg.m_sSymbol">
-            <summary>
-            ES Ticker Mnemonic
-            </summary>
-        </member>
-        <member name="M:VDMERLib.EasyRouter.Prices.PricesEventArg.#ctor(VDMERLib.EasyRouter.Prices.PricesEventArg.PriceDataType)">
-            <summary>
-            Constructor
-            </summary>
-            <param name="type"></param>
-        </member>
-        <member name="M:VDMERLib.EasyRouter.Prices.PricesEventArg.#ctor">
+        <member name="M:VDMERLib.Database.SQLServer.ABCStoredProcedure.#ctor">
             <summary>
             Vanilla
             </summary>
         </member>
-        <member name="P:VDMERLib.EasyRouter.Prices.PricesEventArg.DataType">
-            <summary>
-            Data type
-            </summary>
-        </member>
-        <member name="P:VDMERLib.EasyRouter.Prices.PricesEventArg.Symbol">
-            <summary>
-            ES Ticker Mnemonic
-            </summary>
-        </member>
-        <member name="T:VDMERLib.EasyRouter.Prices.PricesEventArg.PriceDataType">
-            <summary>
-            PriceDataType
-            </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.Prices.PricesEventArg.PriceDataType.TradeData">
-            <summary>
-            tradedata
-            </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.Prices.PricesEventArg.PriceDataType.MarketMode">
-             <summary>
-            marketmode
-             </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.Prices.TradeData.m_eAskOrderType">
-            <summary>
-            Ask Price Type
-            </summary>
-            
-        </member>
-        <member name="F:VDMERLib.EasyRouter.Prices.TradeData.m_eBidOrderType">
-            <summary>
-            Bid Price Type
-            </summary>
-            
-        </member>
-        <member name="F:VDMERLib.EasyRouter.Prices.TradeData.m_Bid">
-            <summary>
-            bid
-            </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.Prices.TradeData.m_Ask">
-            <summary>
-            ask
-            </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.Prices.TradeData.m_Trade">
-            <summary>
-            Trade
-            </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.Prices.TradeData.m_dClose">
-            <summary>
-            Close
-            </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.Prices.TradeData.m_dSettlement">
-            <summary>
-            Settlement
-            </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.Prices.TradeData.m_sSettlementTime">
-            <summary>
-            Settlement time
-            </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.Prices.TradeData.m_sSettlementDate">
-            <summary>
-            Settlement date
-            </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.Prices.TradeData.m_dPrevSettlement">
-            <summary>
-            Prev Settlement
-            </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.Prices.TradeData.m_sPrevSettlementTime">
-            <summary>
-            Prev Settlement time
-            </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.Prices.TradeData.m_sPrevSettlementDate">
-            <summary>
-            Prev Settlement date
-            </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.Prices.TradeData.m_nTotalTradeVolume">
-            <summary>
-            Total traded volume
-            </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.Prices.TradeData.m_bSnapshot">
-            <summary>
-            Indicates if is a snapshot
-            </summary>
-        </member>
-        <member name="M:VDMERLib.EasyRouter.Prices.TradeData.#ctor">
+        <member name="M:VDMERLib.Database.SQLServer.ABCStoredProcedure.Finalize">
             <summary>
             Vanilla
             </summary>
         </member>
-        <member name="M:VDMERLib.EasyRouter.Prices.TradeData.DecodeFIX(EASYROUTERCOMCLIENTLib.IFIXMessage,System.Boolean)">
+        <member name="M:VDMERLib.Database.SQLServer.ABCStoredProcedure.Open(System.Boolean)">
             <summary>
-            Decode price FIX message
+            Open connection
             </summary>
-            <param name="FIXMsg"></param>
-            <param name="bSnapFull"></param>
+            <param name="bGlobal">Reuse connection</param>
             <returns></returns>
         </member>
-        <member name="P:VDMERLib.EasyRouter.Prices.TradeData.Close">
+        <member name="M:VDMERLib.Database.SQLServer.ABCStoredProcedure.Open">
             <summary>
-            Close
+            open connection
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:VDMERLib.Database.SQLServer.ABCStoredProcedure.Init">
+            <summary>
+            intialise sql objects
             </summary>
         </member>
-        <member name="P:VDMERLib.EasyRouter.Prices.TradeData.Settlement">
+        <member name="M:VDMERLib.Database.SQLServer.ABCStoredProcedure.Close">
             <summary>
-            Settlement
+            Close sql connection
             </summary>
         </member>
-        <member name="P:VDMERLib.EasyRouter.Prices.TradeData.SettlementTime">
+        <member name="M:VDMERLib.Database.SQLServer.ABCStoredProcedure.ExecuteReader">
             <summary>
-            Settlement time
+            Returns Data from Database
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:VDMERLib.Database.SQLServer.ABCStoredProcedure.ExecuteNonQuery">
+            <summary>
+            No Record Set Returned
             </summary>
         </member>
-        <member name="P:VDMERLib.EasyRouter.Prices.TradeData.SettlementDate">
+        <member name="M:VDMERLib.Database.SQLServer.ABCStoredProcedure.AddVarcharParameter(System.String,System.String,System.Int32)">
             <summary>
-            Settlement date
+            add char
+            </summary>
+            <param name="sParameterName"></param>
+            <param name="sVal"></param>
+            <param name="size"></param>
+        </member>
+        <member name="M:VDMERLib.Database.SQLServer.ABCStoredProcedure.AddTextParameter(System.String,System.String)">
+            <summary>
+            add text
+            </summary>
+            <param name="sParameterName"></param>
+            <param name="sVal"></param>
+        </member>
+        <member name="M:VDMERLib.Database.SQLServer.ABCStoredProcedure.AddIntegerParameter(System.String,System.Int32)">
+            <summary>
+            add int
+            </summary>
+            <param name="sParameterName"></param>
+            <param name="nVal"></param>
+        </member>
+        <member name="M:VDMERLib.Database.SQLServer.ABCStoredProcedure.AddTinyIntParameter(System.String,System.Int32)">
+            <summary>
+            add tiny int
+            </summary>
+            <param name="sParameterName"></param>
+            <param name="nVal"></param>
+        </member>
+        <member name="M:VDMERLib.Database.SQLServer.ABCStoredProcedure.AddBitParameter(System.String,System.Int32)">
+            <summary>
+            add bit
+            </summary>
+            <param name="sParameterName"></param>
+            <param name="nVal"></param>
+        </member>
+        <member name="M:VDMERLib.Database.SQLServer.ABCStoredProcedure.AddBitParameter(System.String,System.Boolean)">
+            <summary>
+            add bit
+            </summary>
+            <param name="sParameterName"></param>
+            <param name="bVal"></param>
+        </member>
+        <member name="M:VDMERLib.Database.SQLServer.ABCStoredProcedure.AddDoubleParameter(System.String,System.Double)">
+            <summary>
+            add double
+            </summary>
+            <param name="sParameterName"></param>
+            <param name="dVal"></param>
+        </member>
+        <member name="M:VDMERLib.Database.SQLServer.ABCStoredProcedure.AddDecimalParameter(System.String,System.Decimal)">
+            <summary>
+            add decimal
+            </summary>
+            <param name="sParameterName"></param>
+            <param name="dVal"></param>
+        </member>
+        <member name="M:VDMERLib.Database.SQLServer.ABCStoredProcedure.AddDateTimeParameter(System.String,System.DateTime)">
+            <summary>
+            add datetime 
+            </summary>
+            <param name="sParameterName"></param>
+            <param name="dtVal"></param>
+        </member>
+        <member name="M:VDMERLib.Database.SQLServer.ABCStoredProcedure.AddCharParameter(System.String,System.Char)">
+            <summary>
+            add var char
+            </summary>
+            <param name="sParameterName"></param>
+            <param name="cVal"></param>
+        </member>
+        <member name="M:VDMERLib.Database.SQLServer.ABCStoredProcedure.ClearParameters">
+            <summary>
+            clear param
             </summary>
         </member>
-        <member name="P:VDMERLib.EasyRouter.Prices.TradeData.PrevSettlement">
+        <member name="P:VDMERLib.Database.SQLServer.ABCStoredProcedure.DSN">
             <summary>
-            Prev Settlement
+            Connection String
             </summary>
         </member>
-        <member name="P:VDMERLib.EasyRouter.Prices.TradeData.PrevSettlementTime">
+        <member name="P:VDMERLib.Database.SQLServer.ABCStoredProcedure.TIMEOUT">
             <summary>
-            Prev Settlement time
+            Timeout
             </summary>
         </member>
-        <member name="P:VDMERLib.EasyRouter.Prices.TradeData.PrevSettlementDate">
+        <member name="T:VDMERLib.Database.Constants">
             <summary>
-            Prev Settlement date
+            Summary description for Constants.
             </summary>
         </member>
-        <member name="P:VDMERLib.EasyRouter.Prices.TradeData.TotalTradeVolume">
+        <member name="F:VDMERLib.Database.Constants.VDM_DSN">
             <summary>
-            Total traded volume
+            in development 
             </summary>
         </member>
-        <member name="P:VDMERLib.EasyRouter.Prices.TradeData.SnapShot">
+        <member name="M:VDMERLib.Database.Constants.#ctor">
             <summary>
-            public Property to get snapshot
-            </summary>
-        </member>
-        <member name="T:VDMERLib.EasyRouter.Prices.TradeData.Implied">
-            <summary>
-            Price Type (Implied or Actual)
-            </summary>
-            
-        </member>
-        <member name="T:VDMERLib.EasyRouter.Structure.StructureDataType">
-            <summary>
-            Class StructureDataType
-            </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.Structure.StructureDataType.Unknown">
-            <summary>
-            unknown
-            </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.Structure.StructureDataType.Commodity">
-            <summary>
-            Commodity
-            </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.Structure.StructureDataType.SecurityExchange">
-            <summary>
-            security exchange
-            </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.Structure.StructureDataType.TEInstrument">
-            <summary>
-            teinstrument
-            </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.Structure.StructureDataType.ESExchange">
-            <summary>
-            esexchange
-            </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.Structure.StructureDataType.EndOfResponses">
-            <summary>
-            end of security responses
+            in development 
             </summary>
         </member>
         <member name="T:VDMERLib.EasyRouter.EasyRouterClient.ERCSFIXClient">
@@ -922,466 +1242,6 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="T:VDMERLib.EasyRouter.Structure.ESExchange">
-            <summary>
-            Class ESExchange
-            </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.Structure.ESExchange.m_Exchange">
-            <summary>
-            Link to security exchange this belongs to
-            </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.Structure.ESExchange.m_ESCommodityMap">
-            <summary>
-            add all commodity to this ESExchange
-            </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.Structure.ESExchange.m_ESExchange">
-            <summary>
-            ES Exchange code 
-            </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.Structure.ESExchange.m_sESExchangeDesc">
-            <summary>
-            ES Exchange Description
-            </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.Structure.ESExchange.m_bSubscribed">
-            <summary>
-            Have we subscribed 
-            </summary>
-        </member>
-        <member name="M:VDMERLib.EasyRouter.Structure.ESExchange.#ctor(System.String,System.String,VDMERLib.EasyRouter.Structure.SecurityExchange)">
-            <summary>
-            Constructor
-            </summary>
-            <param name="sESExchange"></param>
-            <param name="sExchangeDesc"></param>
-            <param name="exchange"></param>
-        </member>
-        <member name="M:VDMERLib.EasyRouter.Structure.ESExchange.AddCommodity(System.String,System.String,System.String)">
-            <summary>
-            add new commodity + commodity symbol to this esexchange
-            </summary>
-            <param name="sCommodity"></param>
-            <param name="sSymbol"></param>
-            <param name="sDesc"></param>
-            <returns></returns>
-        </member>
-        <member name="M:VDMERLib.EasyRouter.Structure.ESExchange.GetCommodity(System.String)">
-            <summary>
-            Find the commodity if exists and return
-            </summary>
-            <param name="sCommdity"></param>
-            <returns></returns>
-        </member>
-        <member name="P:VDMERLib.EasyRouter.Structure.ESExchange.SecurityExchangeObj">
-            <summary>
-            Link to security exchange this belongs to
-            </summary>
-        </member>
-        <member name="P:VDMERLib.EasyRouter.Structure.ESExchange.ESExchangeCode">
-            <summary>
-            ES Exchange code
-            </summary>
-        </member>
-        <member name="P:VDMERLib.EasyRouter.Structure.ESExchange.ESExchangeDesc">
-            <summary>
-            ES Exchange Description
-            </summary>
-        </member>
-        <member name="P:VDMERLib.EasyRouter.Structure.ESExchange.Subscribed">
-            <summary>
-            Get and set to see if we have subscribed for this ESexchange
-            </summary>
-        </member>
-        <member name="P:VDMERLib.EasyRouter.Structure.ESExchange.Map">
-            <summary>
-            list of all commodity security types for this esexchange
-            </summary>
-        </member>
-        <member name="P:VDMERLib.EasyRouter.Structure.ESExchange.Exchange">
-            <summary>
-            security exchange for the esexchange
-            </summary>
-        </member>
-        <member name="T:VDMERLib.EasyRouter.Risk.RiskEventArg">
-            <summary>
-            PricesEventArg
-            </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.Risk.RiskEventArg.m_RiskType">
-            <summary>
-            Risk type
-            </summary>
-        </member>
-        <member name="M:VDMERLib.EasyRouter.Risk.RiskEventArg.#ctor(VDMERLib.EasyRouter.Risk.RiskEventArg.RiskDataType)">
-            <summary>
-            Constructor
-            </summary>
-            <param name="type"></param>
-        </member>
-        <member name="M:VDMERLib.EasyRouter.Risk.RiskEventArg.#ctor">
-            <summary>
-            Vanilla
-            </summary>
-        </member>
-        <member name="P:VDMERLib.EasyRouter.Risk.RiskEventArg.DataType">
-            <summary>
-            Data type
-            </summary>
-        </member>
-        <member name="T:VDMERLib.EasyRouter.Risk.RiskEventArg.RiskDataType">
-            <summary>
-            PriceDataType
-            </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.Risk.RiskEventArg.RiskDataType.Account">
-            <summary>
-            account level
-            </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.Risk.RiskEventArg.RiskDataType.Position">
-             <summary>
-            position level
-             </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.Risk.Position.m_sSymbol">
-            <summary>
-            ES Ticker Mnemonic
-            </summary>
-        </member>
-        <member name="M:VDMERLib.EasyRouter.Risk.Position.DecodeFIXGroup(MESSAGEFIX3Lib.IFIXGroup)">
-            <summary>
-            Decode position FIX message
-            </summary>
-            <param name="FIXGroup"></param>
-            <returns></returns>
-        </member>
-        <member name="P:VDMERLib.EasyRouter.Risk.Position.PAL">
-            <summary>
-            PAL
-            </summary>
-        </member>
-        <member name="P:VDMERLib.EasyRouter.Risk.Position.RoundTrips">
-            <summary>
-            Round Trips
-            </summary>
-        </member>
-        <member name="P:VDMERLib.EasyRouter.Risk.Position.NumberFills">
-            <summary>
-            NumberFills
-            </summary>
-        </member>
-        <member name="P:VDMERLib.EasyRouter.Risk.Position.NetPosition">
-            <summary>
-            Net Position
-            </summary>
-        </member>
-        <member name="P:VDMERLib.EasyRouter.Risk.Position.Symbol">
-            <summary>
-            ES Ticker Mnemonic
-            </summary>
-        </member>
-        <member name="P:VDMERLib.EasyRouter.Risk.Position.AccountID">
-            <summary>
-            AccountID
-            </summary>
-        </member>
-        <member name="T:VDMERLib.EasyRouter.Orders.OrderInfo">
-            <summary>
-            Class OrderInfo
-            </summary>
-        </member>
-        <member name="T:VDMERLib.EasyRouter.Orders.OrderDataEventArg">
-            <summary>
-            Class OrderDataEventArg
-            </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.Orders.OrderDataEventArg.m_OrderType">
-            <summary>
-            Type of message
-            </summary>
-        </member>
-        <member name="M:VDMERLib.EasyRouter.Orders.OrderDataEventArg.#ctor(VDMERLib.EasyRouter.Orders.OrderDataEventArg.OrderDataType)">
-            <summary>
-            Constructor
-            </summary>
-            <param name="type"></param>
-        </member>
-        <member name="M:VDMERLib.EasyRouter.Orders.OrderDataEventArg.#ctor">
-            <summary>
-            Vanilla
-            </summary>
-        </member>
-        <member name="P:VDMERLib.EasyRouter.Orders.OrderDataEventArg.DataType">
-            <summary>
-            Get type
-            </summary>
-        </member>
-        <member name="T:VDMERLib.EasyRouter.Orders.OrderDataEventArg.OrderDataType">
-            <summary>
-            OrderDataType
-            </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.Orders.OrderDataEventArg.OrderDataType.Unknown">
-            <summary>
-            unknown
-            </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.Orders.OrderDataEventArg.OrderDataType.Trade">
-            <summary>
-            trade
-            </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.Orders.OrderDataEventArg.OrderDataType.Order">
-            <summary>
-            order
-            </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.Orders.OrderInfo.m_instrument">
-            <summary>
-            Instrument details for this order
-            </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.Orders.OrderInfo.m_dPrice">
-            <summary>
-            price of order
-            </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.Orders.OrderInfo.m_nOrderQty">
-            <summary>
-            total order quantity
-            </summary>
-        </member>
-        <member name="M:VDMERLib.EasyRouter.Orders.OrderInfo.#ctor(System.String)">
-            <summary>
-            Constructor
-            </summary>
-            <param name="instrument"></param>
-            <param name="sTickerMnemonic"></param>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.Orders.OrderInfo.m_sTickerMnemonic">
-            <summary>
-            ES Ticker mnemonic
-            </summary>
-        </member>
-        <member name="M:VDMERLib.EasyRouter.Orders.OrderInfo.#ctor(VDMERLib.EasyRouter.Orders.OrderInfo)">
-            <summary>
-            constructor
-            </summary>
-            <param name="order"></param>
-        </member>
-        <member name="M:VDMERLib.EasyRouter.Orders.OrderInfo.CreateFixMessage(MESSAGEFIX3Lib.FIXMsgConstants)">
-            <summary>
-            Generate a fix message
-            </summary>
-            <param name="MsgType"></param>
-            <returns></returns>
-        </member>
-        <member name="M:VDMERLib.EasyRouter.Orders.OrderInfo.AddConstants(MESSAGEFIX3Lib.FIXMessage)">
-            <summary>
-            Basic defaults that are hard coded and not required
-            </summary>
-            <param name="message"></param>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.Orders.OrderInfo.m_nPrimaryBOID">
-            <summary>
-            ES Primary BOID - ID for order
-            </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.Orders.OrderInfo.m_nSecondBOID">
-            <summary>
-            ES Secondary BOID - ID for order
-            </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.Orders.OrderInfo.m_nLeavesQty">
-            <summary>
-            remaining order quantity
-            </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.Orders.OrderInfo.m_nCumQty">
-            <summary>
-            total traded quantity
-            </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.Orders.OrderInfo.m_sClOrdID">
-            <summary>
-            ES FIX CLORID
-            </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.Orders.OrderInfo.m_sOrdID">
-            <summary>
-            Host Order ID
-            </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.Orders.OrderInfo.m_sExecutionReportStatus">
-            <summary>
-            Status type for the order 
-            </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.Orders.OrderInfo.m_sSide">
-            <summary>
-            Decription of side from MESSAGEFIX3Lib.FIXSideConstants
-            </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.Orders.OrderInfo.m_TransactTime">
-            <summary>
-            Time of transaction
-            </summary>
-        </member>
-        <member name="M:VDMERLib.EasyRouter.Orders.OrderInfo.ApplyChanges(VDMERLib.EasyRouter.Orders.OrderInfo)">
-            <summary>
-            Apply changes from another Order
-            </summary>
-            <param name="order"></param>
-        </member>
-        <member name="M:VDMERLib.EasyRouter.Orders.OrderInfo.ParseFix(EASYROUTERCOMCLIENTLib.IFIXMessage)">
-            <summary>
-            Parse the FIX message for order details
-            </summary>
-            <param name="FIXMsg"></param>
-            <returns></returns>
-        </member>
-        <member name="M:VDMERLib.EasyRouter.Orders.OrderInfo.SetPrice(EASYROUTERCOMCLIENTLib.IFIXMessage)">
-            <summary>
-            Set the order price
-            </summary>
-            <param name="FIXMsg"></param>
-        </member>
-        <member name="M:VDMERLib.EasyRouter.Orders.OrderInfo.SetStatus(EASYROUTERCOMCLIENTLib.IFIXMessage)">
-            <summary>
-            set order status - exec type
-            </summary>
-            <param name="FIXMsg"></param>
-        </member>
-        <member name="M:VDMERLib.EasyRouter.Orders.OrderInfo.ToString">
-            <summary>
-            Order details 
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:VDMERLib.EasyRouter.Orders.OrderInfo.GetExecType(VDMERLib.EasyRouter.Orders.Status)">
-            <summary>
-            Converts Exec Type to friendly description
-            </summary>
-            <param name="sExecType"></param>
-            <returns></returns>
-        </member>
-        <member name="P:VDMERLib.EasyRouter.Orders.OrderInfo.Instrument">
-            <summary>
-            Instrument details for this order
-            </summary>
-        </member>
-        <member name="P:VDMERLib.EasyRouter.Orders.OrderInfo.AvgPx">
-            <summary>
-            Average Price of fills
-            </summary>
-        </member>
-        <member name="P:VDMERLib.EasyRouter.Orders.OrderInfo.Price">
-            <summary>
-            price of order
-            </summary>
-        </member>
-        <member name="P:VDMERLib.EasyRouter.Orders.OrderInfo.OrderQty">
-            <summary>
-            total order quantity
-            </summary>
-        </member>
-        <member name="P:VDMERLib.EasyRouter.Orders.OrderInfo.OrderType">
-             <summary>
-             Order Type
-             </summary>
-            
-        </member>
-        <member name="P:VDMERLib.EasyRouter.Orders.OrderInfo.TimeInForce">
-            <summary>
-            Time in Force
-            </summary>
-        </member>
-        <member name="P:VDMERLib.EasyRouter.Orders.OrderInfo.TickerMnemonic">
-            <summary>
-            ES Ticker mnemonic
-            </summary>
-        </member>
-        <member name="P:VDMERLib.EasyRouter.Orders.OrderInfo.PrimaryBOID">
-            <summary>
-            ES Primary BOID - ID for order
-            </summary>
-        </member>
-        <member name="P:VDMERLib.EasyRouter.Orders.OrderInfo.SecondBOID">
-            <summary>
-            ES Secondary BOID - ID for order
-            </summary>
-        </member>
-        <member name="P:VDMERLib.EasyRouter.Orders.OrderInfo.LeavesQty">
-            <summary>
-            remaining order quantity
-            </summary>
-        </member>
-        <member name="P:VDMERLib.EasyRouter.Orders.OrderInfo.CumQty">
-            <summary>
-            total traded quantity
-            </summary>
-        </member>
-        <member name="P:VDMERLib.EasyRouter.Orders.OrderInfo.ClOrdID">
-            <summary>
-            ES FIX CLORID
-            </summary>
-        </member>
-        <member name="P:VDMERLib.EasyRouter.Orders.OrderInfo.AccountID">
-            <summary>
-            AccountID
-            </summary>
-            
-        </member>
-        <member name="P:VDMERLib.EasyRouter.Orders.OrderInfo.OrdID">
-            <summary>
-            Host Order ID
-            </summary>
-        </member>
-        <member name="P:VDMERLib.EasyRouter.Orders.OrderInfo.ExecutionReportStatus">
-            <summary>
-            Status type for the order 
-            </summary>
-        </member>
-        <member name="P:VDMERLib.EasyRouter.Orders.OrderInfo.Side">
-            <summary>
-            Decription of side from MESSAGEFIX3Lib.FIXSideConstants
-            </summary>
-        </member>
-        <member name="P:VDMERLib.EasyRouter.Orders.OrderInfo.IsBuy">
-            <summary>
-            Only valid if buy and sell are only options
-            </summary>
-        </member>
-        <member name="P:VDMERLib.EasyRouter.Orders.OrderInfo.IsSell">
-            <summary>
-            Only valid if buy and sell are only option
-            </summary>
-        </member>
-        <member name="P:VDMERLib.EasyRouter.Orders.OrderInfo.TransactTime">
-            <summary>
-            Time of transaction
-            </summary>
-        </member>
-        <member name="M:VDMERLib.EasyRouter.Risk.AccountManager.DecodeFIX(MESSAGEFIX3Lib.IFIXMessage)">
-            <summary>
-            Decode price FIX message
-            </summary>
-            <param name="FIXMsg"></param>
-            <returns></returns>
-        </member>
-        <member name="M:VDMERLib.EasyRouter.Risk.AccountManager.FindAccount(System.Nullable{System.Int64},MESSAGEFIX3Lib.FIXMessage)">
-            <summary>
-            Find Account , if no account id provided then see if there is only
-            one account , get these details and add the account ud to the outgoing fixmessage
-            </summary>
-            <param name="lAccountID"></param>
-            <param name="message"></param>
-            <returns>the account info object</returns>
-        </member>
         <member name="T:VDMERLib.EasyRouter.Orders.TradeInfo">
             <summary>
             Class TradeInfo
@@ -1464,181 +1324,248 @@
             Trade Price
             </summary>
         </member>
-        <member name="T:VDMERLib.EasyRouter.Prices.SecurityStatus">
+        <member name="T:VDMERLib.EasyRouter.Structure.InstrumentManager">
             <summary>
-            Class SecurityStatus
+            Class InstrumentManager
             </summary>
         </member>
-        <member name="F:VDMERLib.EasyRouter.Prices.SecurityStatus.m_status">
+        <member name="F:VDMERLib.EasyRouter.Structure.InstrumentManager.m_directTEMap">
             <summary>
-            List of market modes 
+            Direct ESTickerMnemonic to TEInstrument infromation
             </summary>
         </member>
-        <member name="M:VDMERLib.EasyRouter.Prices.SecurityStatus.#ctor">
+        <member name="M:VDMERLib.EasyRouter.Structure.InstrumentManager.AddDirectTE(VDMERLib.EasyRouter.Structure.TEInstrument)">
+            <summary>
+            Add REInstrument to Local hashtable of ESTickerMnemonic
+            </summary>
+            <param name="instrument">returns Tradable Entity Information</param>
+        </member>
+        <member name="M:VDMERLib.EasyRouter.Structure.InstrumentManager.GetDirectTE(System.String)">
+            <summary>
+            Get TEInstrument from TicketMnemonic
+            </summary>
+            <param name="sTE">TicketMnemonic</param>
+            <returns></returns>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.Structure.InstrumentManager.m_InstrumentMap">
+            <summary>
+            Map of Security  Exchanges
+            </summary>
+        </member>
+        <member name="M:VDMERLib.EasyRouter.Structure.InstrumentManager.#ctor">
             <summary>
             Vanilla
             </summary>
         </member>
-        <member name="M:VDMERLib.EasyRouter.Prices.SecurityStatus.DecodeFIX(EASYROUTERCOMCLIENTLib.IFIXMessage)">
+        <member name="M:VDMERLib.EasyRouter.Structure.InstrumentManager.HandleCompletionUpdate(EASYROUTERCOMCLIENTLib.IFIXMessage)">
             <summary>
-            Get Market mode from FIX Message
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:VDMERLib.EasyRouter.Structure.InstrumentManager.GetSecurityExchange(System.String)">
+            <summary>
+            Get the security exchange if it exists
+            </summary>
+            <param name="sKey"></param>
+            <returns></returns>
+        </member>
+        <member name="M:VDMERLib.EasyRouter.Structure.InstrumentManager.HandleSecurityUpdate(EASYROUTERCOMCLIENTLib.IFIXMessage)">
+            <summary>
+            Process Security FIX Update message
             </summary>
             <param name="FIXMsg"></param>
             <returns></returns>
         </member>
-        <member name="M:VDMERLib.EasyRouter.Prices.SecurityStatus.ModeToString">
+        <member name="M:VDMERLib.EasyRouter.Structure.InstrumentManager.HandleESExchangeUpdate(EASYROUTERCOMCLIENTLib.IFIXMessage)">
             <summary>
-            list of all market modes in use friendly format
+            Process ESExchange FIX Update message
             </summary>
+            <param name="FIXMsg"></param>
             <returns></returns>
         </member>
-        <member name="M:VDMERLib.EasyRouter.Prices.SecurityStatus.ModeToString(System.String)">
+        <member name="M:VDMERLib.EasyRouter.Structure.InstrumentManager.HandleTEInstrumentUpdate(EASYROUTERCOMCLIENTLib.IFIXMessage)">
             <summary>
-            list of all market modes in use friendly format
+            Process Tradable Entity Instrument FIX Update message
             </summary>
-            <param name="sData"></param>
+            <param name="FIXMsg"></param>
             <returns></returns>
         </member>
-        <member name="M:VDMERLib.EasyRouter.Prices.SecurityStatus.ToString">
+        <member name="M:VDMERLib.EasyRouter.Structure.InstrumentManager.FindByISINandExchange(System.String,System.String)">
             <summary>
-            list of all market modes in use friendly format
+            used to locate an equity by Exchange Reuters ID and ISIN 
             </summary>
+            <param name="sSecurityID"></param>
+            <param name="sExchange"></param>
             <returns></returns>
         </member>
-        <member name="M:VDMERLib.EasyRouter.Prices.SecurityStatus.GetMode(MESSAGEFIX3Lib.FIXSecurityTradingStatusConstants)">
+        <member name="M:VDMERLib.EasyRouter.Structure.InstrumentManager.HandleCommodityUpdate(EASYROUTERCOMCLIENTLib.IFIXMessage)">
             <summary>
-            Get user friendly market mode description from market mode code
+            Process Commodity FIX Update message
             </summary>
-            <param name="constant"></param>
+            <param name="FIXMsg"></param>
             <returns></returns>
         </member>
-        <member name="P:VDMERLib.EasyRouter.Prices.SecurityStatus.Status">
+        <member name="M:VDMERLib.EasyRouter.Structure.InstrumentManager.AddExchange(System.String,System.String)">
             <summary>
-            Returns the arraylist of market modes for this instrument
+            Add Security Exchange to instrument map if does not exist
+            </summary>
+            <param name="sExchange">Security Exchange ID</param>
+            <param name="sDescription">"Security Exchange Description</param>
+            <returns>Either Creates new SecurityExchange if does not exist or retrives existing from Instruemnt Map</returns> 
+        </member>
+        <member name="M:VDMERLib.EasyRouter.Structure.InstrumentManager.GetExchange(System.String)">
+            <summary>
+            Get the security exchange 
+            </summary>
+            <param name="sExchange">Security Exchange ID</param>
+            <returns>returns SecurityExchange if exists in Instrument map else null</returns>
+        </member>
+        <member name="M:VDMERLib.EasyRouter.Structure.InstrumentManager.Subscribed(System.String,System.String)">
+            <summary>
+            HAve we subscribed at ESExchange level for the products
+            </summary>
+            <param name="sExchange">Security Exchange ID</param>
+            <param name="sESExchange">ESExchange ID</param>
+            <returns>true if we have sent subscription request</returns>
+        </member>
+        <member name="M:VDMERLib.EasyRouter.Structure.InstrumentManager.Subscribed(System.String,System.String,System.String,System.String)">
+            <summary>
+            Have we subscribed at commodity level for the products
+            </summary>
+            <param name="sExchange">Security Exchange ID</param>
+            <param name="sESExchange">ESExchange ID</param>
+            <param name="sSymbol">Symbol ID</param>
+            <param name="sSecurityType">Security Type eg "OPT" for options</param>
+            <returns>true if we have sent subscription request</returns>
+        </member>
+        <member name="M:VDMERLib.EasyRouter.Structure.InstrumentManager.SetSubscribed(System.String,System.String)">
+            <summary>
+            Set ESExchange as subscribed
+            </summary>
+            <param name="sExchange"></param>
+            <param name="sESExchange"></param>
+        </member>
+        <member name="M:VDMERLib.EasyRouter.Structure.InstrumentManager.SetSubscribed(System.String,System.String,System.String,System.String)">
+            <summary>
+            Set Commodity as subscribed
+            </summary>
+            <param name="sExchange"></param>
+            <param name="sESExchange"></param>
+            <param name="sSymbol"></param>
+            <param name="sSecurityType"></param>
+        </member>
+        <member name="P:VDMERLib.EasyRouter.Structure.InstrumentManager.Map">
+            <summary>
+            Property to access the instrument map which stores SecurityExchange
             </summary>
         </member>
-        <member name="T:VDMERLib.EasyRouter.General.Logon">
+        <member name="T:VDMERLib.Database.DataAccess.CustomAccess">
             <summary>
-            Logon
+            APJ allows writing of Trade info into a db source
             </summary>
         </member>
-        <member name="T:VDMERLib.EasyRouter.General.GeneralMsgEventArg">
+        <member name="F:VDMERLib.Database.DataAccess.CustomAccess.SP_InsertTick">
             <summary>
-            Class GeneralMsgEventArg
+            Insert record
             </summary>
         </member>
-        <member name="F:VDMERLib.EasyRouter.General.GeneralMsgEventArg.m_Datatype">
+        <member name="M:VDMERLib.Database.DataAccess.CustomAccess.#ctor(System.String)">
             <summary>
-            get type
+            vanilla construtor
             </summary>
+            <param name="sDSN"></param>
         </member>
-        <member name="M:VDMERLib.EasyRouter.General.GeneralMsgEventArg.#ctor(VDMERLib.EasyRouter.General.GeneralMsgEventArg.GeneralDataType)">
+        <member name="M:VDMERLib.Database.DataAccess.CustomAccess.InsertTick(System.String,System.DateTime,System.String,System.Double)">
             <summary>
-            vanilla
+            Insert tick data
             </summary>
-            <param name="type"></param>
-        </member>
-        <member name="P:VDMERLib.EasyRouter.General.GeneralMsgEventArg.DataType">
-            <summary>
-            get type
-            </summary>
-        </member>
-        <member name="T:VDMERLib.EasyRouter.General.GeneralMsgEventArg.GeneralDataType">
-            <summary>
-            GeneralDataType
-            </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.General.GeneralMsgEventArg.GeneralDataType.Unknown">
-            <summary>
-            unknown
-            </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.General.GeneralMsgEventArg.GeneralDataType.Login">
-            <summary>
-            login
-            </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.General.Logon.m_bLoginSuccess">
-            <summary>
-            status of logon request
-            </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.General.Logon.m_bLogoff">
-            <summary>
-            status of logoff request
-            </summary>
-        </member>
-        <member name="M:VDMERLib.EasyRouter.General.Logon.#ctor">
-            <summary>
-            Vanilla
-            </summary>
-        </member>
-        <member name="M:VDMERLib.EasyRouter.General.Logon.ToString">
-            <summary>
-            To string 
-            </summary>
+            <param name="sUsername"></param>
+            <param name="dtTime"></param>
+            <param name="sDataName"></param>
+            <param name="dTick"></param>
             <returns></returns>
         </member>
-        <member name="P:VDMERLib.EasyRouter.General.Logon.LoggedOn">
+        <member name="T:VDMERLib.EasyRouter.Risk.Account">
             <summary>
-            public property for logon status
+            Account Info
             </summary>
         </member>
-        <member name="P:VDMERLib.EasyRouter.General.Logon.LoggedOff">
+        <member name="F:VDMERLib.EasyRouter.Risk.Account.m_strDescription">
             <summary>
-            public property for logoff status
+            Account Description
             </summary>
         </member>
-        <member name="P:VDMERLib.EasyRouter.General.Logon.Error">
+        <member name="F:VDMERLib.EasyRouter.Risk.Account.m_TickerMap">
             <summary>
-            Get or Set Error String
+            string (exchange) against ticker default list
             </summary>
         </member>
-        <member name="P:VDMERLib.EasyRouter.General.Logon.ErrorCode">
-            <summary>
-            Login Error Codes
-            </summary>
-        </member>
-        <member name="T:VDMERLib.EasyRouter.General.Logon.FailureCodes">
-            <summary>
-            Possible Login Failure Codes
-            </summary>
-        </member>
-        <member name="T:VDMERLib.EasyRouter.User.ESUser">
-            <summary>
-            Class ESUser
-            </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.User.ESUser.m_sUserName">
-            <summary>
-            ER client username
-            </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.User.ESUser.m_sPassword">
-            <summary>
-            ER cleint Pwd
-            </summary>
-        </member>
-        <member name="M:VDMERLib.EasyRouter.User.ESUser.#ctor">
-            <summary>
-            Vanilla
-            </summary>
-        </member>
-        <member name="M:VDMERLib.EasyRouter.User.ESUser.#ctor(System.String,System.String)">
+        <member name="M:VDMERLib.EasyRouter.Risk.Account.#ctor(System.Int64)">
             <summary>
             Constructor
             </summary>
-            <param name="sPassword"></param>
-            <param name="sUserName"></param>
+            <param name="AccountID"></param>
+            <returns></returns>
         </member>
-        <member name="P:VDMERLib.EasyRouter.User.ESUser.Username">
+        <member name="M:VDMERLib.EasyRouter.Risk.Account.DecodeFIXMessage(MESSAGEFIX3Lib.IFIXMessage)">
             <summary>
-            Username
+            Decode price FIX message
+            </summary>
+            <param name="FIXMsg"></param>
+            <returns></returns>
+        </member>
+        <member name="M:VDMERLib.EasyRouter.Risk.Account.AddTicker(System.String,MESSAGEFIX3Lib.IFIXGroup)">
+            <summary>
+            Add Ticker defaults for this account
+            </summary>
+            <param name="sExchange"></param>
+            <param name="group"></param>
+        </member>
+        <member name="M:VDMERLib.EasyRouter.Risk.Account.GetTickerDefaults(System.String)">
+            <summary>
+            Get ticker defaults
+            </summary>
+            <param name="sExchange"></param>
+            <returns></returns>
+        </member>
+        <member name="M:VDMERLib.EasyRouter.Risk.Account.ApplyDefaults(System.String,MESSAGEFIX3Lib.FIXMessage)">
+            <summary>
+            Apply ticker defaults
+            </summary>
+            <param name="sExchange"></param>
+            <param name="message"></param>
+        </member>
+        <member name="M:VDMERLib.EasyRouter.Risk.Account.ApplyDefaults(System.String,MESSAGEFIX3Lib.FIXMessage,System.Collections.Hashtable)">
+            <summary>
+            Apply ticker defaults
+            </summary>
+            <param name="sExchange"></param>
+            <param name="message"></param>
+        </member>
+        <member name="P:VDMERLib.EasyRouter.Risk.Account.AccountName">
+            <summary>
+            Account Name
             </summary>
         </member>
-        <member name="P:VDMERLib.EasyRouter.User.ESUser.Password">
+        <member name="P:VDMERLib.EasyRouter.Risk.Account.AccountCode">
             <summary>
-            Password
+            Account Code
+            </summary>
+        </member>
+        <member name="P:VDMERLib.EasyRouter.Risk.Account.Description">
+            <summary>
+            Account Description
+            </summary>
+        </member>
+        <member name="P:VDMERLib.EasyRouter.Risk.Account.Currency">
+            <summary>
+            Account Currency
+            </summary>
+        </member>
+        <member name="P:VDMERLib.EasyRouter.Risk.Account.Positions">
+            <summary>
+            Positions
             </summary>
         </member>
         <member name="T:VDMERLib.EasyRouter.Orders.OrderManagement">
@@ -1707,204 +1634,30 @@
             <param name="nPBOID"></param>
             <returns></returns>
         </member>
-        <member name="T:VDMERLib.EasyRouter.User.TickerDefaults">
-            <summary>
-            Class TickerDefaults
-            </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.User.TickerDefaults.m_sExchange">
-            <summary>
-            Security Exchange code
-            </summary>
-        </member>
-        <member name="M:VDMERLib.EasyRouter.User.TickerDefaults.#ctor(System.String)">
-            <summary>
-            Constructor
-            </summary>
-            <param name="sExchange"></param>
-        </member>
-        <member name="M:VDMERLib.EasyRouter.User.TickerDefaults.AddDefaults(MESSAGEFIX3Lib.IFIXGroup)">
-            <summary>
-            Retrieve ticker information from FIX message
-            </summary>
-            <param name="group"></param>
-        </member>
-        <member name="M:VDMERLib.EasyRouter.User.TickerDefaults.ApplyTickerDefaults(MESSAGEFIX3Lib.FIXMessage)">
-            <summary>
-            Apply ticker info to order ticket fix message
-            </summary>
-            <param name="message"></param>
-        </member>
-        <member name="M:VDMERLib.EasyRouter.User.TickerDefaults.ApplyTickerDefaults(MESSAGEFIX3Lib.FIXMessage,System.Collections.Hashtable)">
-            <summary>
-            Add Custom Ticker Defaults Tag
-            </summary>
-            <param name="message"></param>
-            <param name="map"></param>
-        </member>
-        <member name="P:VDMERLib.EasyRouter.User.TickerDefaults.Exchange">
-            <summary>
-            Security Exchange code
-            </summary>
-        </member>
-        <member name="T:VDMERLib.Database.SQLServer.ABCStoredProcedure">
-            <summary>
-            in development 
-            </summary>
-        </member>
-        <member name="F:VDMERLib.Database.SQLServer.ABCStoredProcedure.m_sDSN">
-            <summary>
-            Connection string
-            </summary>
-        </member>
-        <member name="F:VDMERLib.Database.SQLServer.ABCStoredProcedure.m_sqlConnection">
-            <summary>
-            Database connection objects
-            </summary>
-        </member>
-        <member name="F:VDMERLib.Database.SQLServer.ABCStoredProcedure.m_sqlCommand">
-            <summary>
-            Database Command object
-            </summary>
-        </member>
-        <member name="F:VDMERLib.Database.SQLServer.ABCStoredProcedure.m_sStoredProcedureName">
-            <summary>
-            name of procedure
-            </summary>
-        </member>
-        <member name="M:VDMERLib.Database.SQLServer.ABCStoredProcedure.#ctor">
-            <summary>
-            Vanilla
-            </summary>
-        </member>
-        <member name="M:VDMERLib.Database.SQLServer.ABCStoredProcedure.Finalize">
-            <summary>
-            Vanilla
-            </summary>
-        </member>
-        <member name="M:VDMERLib.Database.SQLServer.ABCStoredProcedure.Open(System.Boolean)">
-            <summary>
-            Open connection
-            </summary>
-            <param name="bGlobal">Reuse connection</param>
-            <returns></returns>
-        </member>
-        <member name="M:VDMERLib.Database.SQLServer.ABCStoredProcedure.Open">
-            <summary>
-            open connection
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:VDMERLib.Database.SQLServer.ABCStoredProcedure.Init">
-            <summary>
-            intialise sql objects
-            </summary>
-        </member>
-        <member name="M:VDMERLib.Database.SQLServer.ABCStoredProcedure.Close">
-            <summary>
-            Close sql connection
-            </summary>
-        </member>
-        <member name="M:VDMERLib.Database.SQLServer.ABCStoredProcedure.ExecuteReader">
-            <summary>
-            Returns Data from Database
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:VDMERLib.Database.SQLServer.ABCStoredProcedure.ExecuteNonQuery">
-            <summary>
-            No Record Set Returned
-            </summary>
-        </member>
-        <member name="M:VDMERLib.Database.SQLServer.ABCStoredProcedure.AddVarcharParameter(System.String,System.String,System.Int32)">
-            <summary>
-            add char
-            </summary>
-            <param name="sParameterName"></param>
-            <param name="sVal"></param>
-            <param name="size"></param>
-        </member>
-        <member name="M:VDMERLib.Database.SQLServer.ABCStoredProcedure.AddTextParameter(System.String,System.String)">
-            <summary>
-            add text
-            </summary>
-            <param name="sParameterName"></param>
-            <param name="sVal"></param>
-        </member>
-        <member name="M:VDMERLib.Database.SQLServer.ABCStoredProcedure.AddIntegerParameter(System.String,System.Int32)">
-            <summary>
-            add int
-            </summary>
-            <param name="sParameterName"></param>
-            <param name="nVal"></param>
-        </member>
-        <member name="M:VDMERLib.Database.SQLServer.ABCStoredProcedure.AddTinyIntParameter(System.String,System.Int32)">
-            <summary>
-            add tiny int
-            </summary>
-            <param name="sParameterName"></param>
-            <param name="nVal"></param>
-        </member>
-        <member name="M:VDMERLib.Database.SQLServer.ABCStoredProcedure.AddBitParameter(System.String,System.Int32)">
-            <summary>
-            add bit
-            </summary>
-            <param name="sParameterName"></param>
-            <param name="nVal"></param>
-        </member>
-        <member name="M:VDMERLib.Database.SQLServer.ABCStoredProcedure.AddBitParameter(System.String,System.Boolean)">
-            <summary>
-            add bit
-            </summary>
-            <param name="sParameterName"></param>
-            <param name="bVal"></param>
-        </member>
-        <member name="M:VDMERLib.Database.SQLServer.ABCStoredProcedure.AddDoubleParameter(System.String,System.Double)">
-            <summary>
-            add double
-            </summary>
-            <param name="sParameterName"></param>
-            <param name="dVal"></param>
-        </member>
-        <member name="M:VDMERLib.Database.SQLServer.ABCStoredProcedure.AddDecimalParameter(System.String,System.Decimal)">
-            <summary>
-            add decimal
-            </summary>
-            <param name="sParameterName"></param>
-            <param name="dVal"></param>
-        </member>
-        <member name="M:VDMERLib.Database.SQLServer.ABCStoredProcedure.AddDateTimeParameter(System.String,System.DateTime)">
-            <summary>
-            add datetime 
-            </summary>
-            <param name="sParameterName"></param>
-            <param name="dtVal"></param>
-        </member>
-        <member name="M:VDMERLib.Database.SQLServer.ABCStoredProcedure.AddCharParameter(System.String,System.Char)">
-            <summary>
-            add var char
-            </summary>
-            <param name="sParameterName"></param>
-            <param name="cVal"></param>
-        </member>
-        <member name="M:VDMERLib.Database.SQLServer.ABCStoredProcedure.ClearParameters">
-            <summary>
-            clear param
-            </summary>
-        </member>
-        <member name="P:VDMERLib.Database.SQLServer.ABCStoredProcedure.DSN">
-            <summary>
-            Connection String
-            </summary>
-        </member>
-        <member name="P:VDMERLib.Database.SQLServer.ABCStoredProcedure.TIMEOUT">
-            <summary>
-            Timeout
-            </summary>
-        </member>
         <member name="T:VDMERLib.EasyRouter.Structure.SecurityExchange">
             <summary>
             Class SecurityExchange
+            </summary>
+        </member>
+        <member name="T:VDMERLib.EasyRouter.Structure.StructureDataEventArg">
+            <summary>
+            StructureDataEventArg
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.Structure.StructureDataEventArg.m_Datatype">
+            <summary>
+            Data Type
+            </summary>
+        </member>
+        <member name="M:VDMERLib.EasyRouter.Structure.StructureDataEventArg.#ctor(VDMERLib.EasyRouter.Structure.StructureDataType)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="type"></param>
+        </member>
+        <member name="P:VDMERLib.EasyRouter.Structure.StructureDataEventArg.DataType">
+            <summary>
+            Get Type
             </summary>
         </member>
         <member name="F:VDMERLib.EasyRouter.Structure.SecurityExchange.m_ESExchangeMap">
@@ -1988,6 +1741,396 @@
             <summary>
             Return the hashmap of ESExchange level objects
             </summary>
+        </member>
+        <member name="T:VDMERLib.EasyRouter.EasyRouterClient.Data.ComponentStatusArgs">
+            <summary>
+            Class ComponentStatusArgs
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.EasyRouterClient.Data.ComponentStatusArgs.m_sType">
+            <summary>
+            component type
+            public const string esFIXComponentCategoryOrders = "O";
+            public const string esFIXComponentCategoryPricesBest = "B";
+            public const string esFIXComponentCategoryPricesDepth = "D";
+            public const string esFIXComponentCategoryStructure = "S";
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.EasyRouterClient.Data.ComponentStatusArgs.m_sExchange">
+            <summary>
+            Security Exchange code
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.EasyRouterClient.Data.ComponentStatusArgs.m_sExchangeDesc">
+            <summary>
+            Security Exchange description
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.EasyRouterClient.Data.ComponentStatusArgs.m_eType">
+            <summary>
+            component status Status
+            </summary>
+        </member>
+        <member name="M:VDMERLib.EasyRouter.EasyRouterClient.Data.ComponentStatusArgs.#ctor(System.String,System.String,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="sType"></param>
+            <param name="sExchange"></param>
+            <param name="sExchangeDesc"></param>
+        </member>
+        <member name="M:VDMERLib.EasyRouter.EasyRouterClient.Data.ComponentStatusArgs.SetStatus(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Set the component status 
+            </summary>
+            <param name="nActive"></param>
+            <param name="nWaiting"></param>
+            <param name="nInactive"></param>
+            <returns></returns>
+        </member>
+        <member name="M:VDMERLib.EasyRouter.EasyRouterClient.Data.ComponentStatusArgs.GetStatus">
+            <summary>
+            Get the current status
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:VDMERLib.EasyRouter.EasyRouterClient.Data.ComponentStatusArgs.GetStatusAsString">
+            <summary>
+            Get status as user friendly string
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:VDMERLib.EasyRouter.EasyRouterClient.Data.ComponentStatusArgs.GetComponentAsString">
+            <summary>
+            Get component type as use friendly string
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:VDMERLib.EasyRouter.EasyRouterClient.Data.ComponentStatusArgs.Exchange">
+            <summary>
+            Security Exchange code
+            </summary>
+        </member>
+        <member name="P:VDMERLib.EasyRouter.EasyRouterClient.Data.ComponentStatusArgs.ExchangeDesc">
+            <summary>
+            Security Exchange description
+            </summary>
+        </member>
+        <member name="P:VDMERLib.EasyRouter.EasyRouterClient.Data.ComponentStatusArgs.ComponentType">
+            <summary>
+            component type
+            public const string esFIXComponentCategoryOrders = "O";
+            public const string esFIXComponentCategoryPricesBest = "B";
+            public const string esFIXComponentCategoryPricesDepth = "D";
+            public const string esFIXComponentCategoryStructure = "S";
+            </summary>
+        </member>
+        <member name="T:VDMERLib.EasyRouter.EasyRouterClient.Data.ComponentStatusArgs.Status">
+            <summary>
+            easyrouter component status enum
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.EasyRouterClient.Data.ComponentStatusArgs.Status.eUnknown">
+            <summary>
+            unknown
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.EasyRouterClient.Data.ComponentStatusArgs.Status.eActive">
+            <summary>
+            active
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.EasyRouterClient.Data.ComponentStatusArgs.Status.eWaiting">
+            <summary>
+            waiting
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.EasyRouterClient.Data.ComponentStatusArgs.Status.eWaitingActive">
+            <summary>
+            waiting active
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.EasyRouterClient.Data.ComponentStatusArgs.Status.eInactive">
+            <summary>
+            inactive
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.EasyRouterClient.Data.ComponentStatusArgs.Status.eInactiveActive">
+            <summary>
+            inactive active
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.EasyRouterClient.Data.ComponentStatusArgs.Status.eInactiveWaiting">
+            <summary>
+            inactive waiting 
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.EasyRouterClient.Data.ComponentStatusArgs.Status.eALL">
+            <summary>
+            all
+            </summary>
+        </member>
+        <member name="T:VDMERLib.EasyRouter.TCP.Client">
+            <summary>
+            Class Client
+            </summary>
+        </member>
+        <member name="M:VDMERLib.EasyRouter.TCP.Client.#ctor(System.Int32,System.String)">
+            <summary>
+            constructor
+            </summary>
+            <param name="nPort">ip port to connect</param>
+            <param name="sIPAddress">address to connect to</param>
+        </member>
+        <member name="M:VDMERLib.EasyRouter.TCP.Client.Finalize">
+            <summary>
+            destructor
+            </summary>
+        </member>
+        <member name="M:VDMERLib.EasyRouter.TCP.Client.Start">
+            <summary>
+            Begin thread to connect
+            </summary>
+        </member>
+        <member name="M:VDMERLib.EasyRouter.TCP.Client.Connect">
+            <summary>
+            connection to tcp server
+            </summary>
+        </member>
+        <member name="M:VDMERLib.EasyRouter.TCP.Client.Stop">
+            <summary>
+            stop connection thread and tcp connection if established
+            </summary>
+        </member>
+        <member name="M:VDMERLib.EasyRouter.TCP.Client.SendFIXMsg(MESSAGEFIX3Lib.FIXMessage)">
+            <summary>
+            write data to the tcp server 
+            </summary>
+            <param name="msg"></param>
+        </member>
+        <member name="M:VDMERLib.EasyRouter.TCP.Client.SetEventFIXMessageHandler(System.Boolean)">
+            <summary>
+            set up event handler to recieve fix data from client reader tcp data stream
+            </summary>
+            <param name="bEnable"></param>
+        </member>
+        <member name="M:VDMERLib.EasyRouter.TCP.Client.EventFIXMessage(System.Object,VDMERLib.EasyRouter.TCP.FIXMessageEventArgs)">
+            <summary>
+            Event raised when FIX data mesage is recieved 
+            </summary>
+            <param name="from"></param>
+            <param name="args"></param>
+        </member>
+        <member name="M:VDMERLib.EasyRouter.TCP.Client.RecvFIXMsg(MESSAGEFIX3Lib.FIXMsgConstants,MESSAGEFIX3Lib.FIXMessage)">
+            <summary>
+            virtual function to handle incoming data
+            </summary>
+            <param name="msgType"></param>
+            <param name="msg"></param>
+        </member>
+        <member name="M:VDMERLib.EasyRouter.TCP.Client.RecvFIXDriverMsg(MESSAGEFIX3Lib.FIXMessage)">
+            <summary>
+            default implemtation to driver status message + logout from exchange orders - does nothing 
+            </summary>
+            <param name="msg"></param>
+        </member>
+        <member name="M:VDMERLib.EasyRouter.TCP.Client.RecvFIXOrderMsg(MESSAGEFIX3Lib.FIXMessage)">
+            <summary>
+            default implemtation to handle orders - does nothing 
+            </summary>
+            <param name="msg"></param>
+        </member>
+        <member name="M:VDMERLib.EasyRouter.TCP.Client.RecvFIXPriceMsg(MESSAGEFIX3Lib.FIXMessage)">
+            <summary>
+            default implemtation to handle market price data - does nothing 
+            </summary>
+            <param name="msg"></param>
+        </member>
+        <member name="M:VDMERLib.EasyRouter.TCP.Client.RecvFIXStatusMsg(MESSAGEFIX3Lib.FIXMessage)">
+            <summary>
+            default implemtation to handle market status - does nothing 
+            </summary>
+            <param name="msg"></param>
+        </member>
+        <member name="M:VDMERLib.EasyRouter.TCP.Client.Disconnect(System.IO.ErrorEventArgs)">
+            <summary>
+             disconnect event has occured from tcp layer
+            </summary>
+            <param name="e">Exception that caused the disconnect store in the ErrorEventArgs</param>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.TCP.Client.m_ConnectionThread">
+            <summary>
+            Connection thread
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.TCP.Client.m_ConnectionState">
+            <summary>
+            state of connection
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.TCP.Client.m_nPort">
+            <summary>
+            connection port
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.TCP.Client.m_sIPAddress">
+            <summary>
+            ipaddress of server to connect to
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.TCP.Client.m_Client">
+            <summary>
+            c# socket class 
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.TCP.Client.m_bContinue">
+            <summary>
+            set Connection variable to true for thread loop
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.TCP.Client.m_nTimeOut">
+            <summary>
+            Connection wait in millisecs 
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.TCP.Client.m_NetworkStream">
+            <summary>
+            network stream to get the read and write stream
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.TCP.Client.m_StreamOut">
+            <summary>
+            stream out - write msg to server
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.TCP.Client.m_StreamIn">
+            <summary>
+            stream to read message from tcp server
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.TCP.Client.m_Reader">
+            <summary>
+            handles incomming packets 
+            </summary>
+        </member>
+        <member name="E:VDMERLib.EasyRouter.TCP.Client.ConnectionEvent">
+            <summary>
+            connection event 
+            </summary>
+        </member>
+        <member name="P:VDMERLib.EasyRouter.TCP.Client.IP">
+            <summary>
+            IPAddress for the tcp server to connect to
+            </summary>
+        </member>
+        <member name="P:VDMERLib.EasyRouter.TCP.Client.Port">
+            <summary>
+            port used by the tcp server to connect to
+            </summary>
+        </member>
+        <member name="T:VDMERLib.EasyRouter.TCP.Client.State">
+            <summary>
+            enum representing state of the tcp connection
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.TCP.Client.State.Unknown">
+            <summary>
+            unknown
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.TCP.Client.State.Connecting">
+            <summary>
+            connecting
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.TCP.Client.State.Connected">
+            <summary>
+            connected
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.TCP.Client.State.Disconnected">
+            <summary>
+            disconnected
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.TCP.Client.State.Disconnecting">
+            <summary>
+            disconnected
+            </summary>
+        </member>
+        <member name="T:VDMERLib.EasyRouter.TCP.Client.EventConnection">
+            <summary>
+            event delegate
+            </summary>
+            <param name="from"></param>
+            <param name="args"></param>
+        </member>
+        <member name="M:VDMERLib.EasyRouter.Risk.AccountManager.DecodeFIX(MESSAGEFIX3Lib.IFIXMessage)">
+            <summary>
+            Decode price FIX message
+            </summary>
+            <param name="FIXMsg"></param>
+            <returns></returns>
+        </member>
+        <member name="M:VDMERLib.EasyRouter.Risk.AccountManager.FindAccount(System.Nullable{System.Int64},MESSAGEFIX3Lib.FIXMessage)">
+            <summary>
+            Find Account , if no account id provided then see if there is only
+            one account , get these details and add the account ud to the outgoing fixmessage
+            </summary>
+            <param name="lAccountID"></param>
+            <param name="message"></param>
+            <returns>the account info object</returns>
+        </member>
+        <member name="T:VDMERLib.EasyRouter.Prices.PricesEventArg">
+            <summary>
+            PricesEventArg
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.Prices.PricesEventArg.m_OrderType">
+            <summary>
+            Price type
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.Prices.PricesEventArg.m_sSymbol">
+            <summary>
+            ES Ticker Mnemonic
+            </summary>
+        </member>
+        <member name="M:VDMERLib.EasyRouter.Prices.PricesEventArg.#ctor(VDMERLib.EasyRouter.Prices.PricesEventArg.PriceDataType)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="type"></param>
+        </member>
+        <member name="M:VDMERLib.EasyRouter.Prices.PricesEventArg.#ctor">
+            <summary>
+            Vanilla
+            </summary>
+        </member>
+        <member name="P:VDMERLib.EasyRouter.Prices.PricesEventArg.DataType">
+            <summary>
+            Data type
+            </summary>
+        </member>
+        <member name="P:VDMERLib.EasyRouter.Prices.PricesEventArg.Symbol">
+            <summary>
+            ES Ticker Mnemonic
+            </summary>
+        </member>
+        <member name="T:VDMERLib.EasyRouter.Prices.PricesEventArg.PriceDataType">
+            <summary>
+            PriceDataType
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.Prices.PricesEventArg.PriceDataType.TradeData">
+            <summary>
+            tradedata
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.Prices.PricesEventArg.PriceDataType.MarketMode">
+             <summary>
+            marketmode
+             </summary>
         </member>
         <member name="T:VDMERLib.EasyRouter.Structure.TEInstrument">
             <summary>
@@ -2280,701 +2423,10 @@
             Has been subscribed to
             </summary>
         </member>
-        <member name="T:VDMERLib.EasyRouter.Risk.Account">
-            <summary>
-            Account Info
-            </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.Risk.Account.m_strDescription">
-            <summary>
-            Account Description
-            </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.Risk.Account.m_TickerMap">
-            <summary>
-            string (exchange) against ticker default list
-            </summary>
-        </member>
-        <member name="M:VDMERLib.EasyRouter.Risk.Account.#ctor(System.Int64)">
-            <summary>
-            Constructor
-            </summary>
-            <param name="AccountID"></param>
-            <returns></returns>
-        </member>
-        <member name="M:VDMERLib.EasyRouter.Risk.Account.DecodeFIXMessage(MESSAGEFIX3Lib.IFIXMessage)">
-            <summary>
-            Decode price FIX message
-            </summary>
-            <param name="FIXMsg"></param>
-            <returns></returns>
-        </member>
-        <member name="M:VDMERLib.EasyRouter.Risk.Account.AddTicker(System.String,MESSAGEFIX3Lib.IFIXGroup)">
-            <summary>
-            Add Ticker defaults for this account
-            </summary>
-            <param name="sExchange"></param>
-            <param name="group"></param>
-        </member>
-        <member name="M:VDMERLib.EasyRouter.Risk.Account.GetTickerDefaults(System.String)">
-            <summary>
-            Get ticker defaults
-            </summary>
-            <param name="sExchange"></param>
-            <returns></returns>
-        </member>
-        <member name="M:VDMERLib.EasyRouter.Risk.Account.ApplyDefaults(System.String,MESSAGEFIX3Lib.FIXMessage)">
-            <summary>
-            Apply ticker defaults
-            </summary>
-            <param name="sExchange"></param>
-            <param name="message"></param>
-        </member>
-        <member name="M:VDMERLib.EasyRouter.Risk.Account.ApplyDefaults(System.String,MESSAGEFIX3Lib.FIXMessage,System.Collections.Hashtable)">
-            <summary>
-            Apply ticker defaults
-            </summary>
-            <param name="sExchange"></param>
-            <param name="message"></param>
-        </member>
-        <member name="P:VDMERLib.EasyRouter.Risk.Account.AccountName">
-            <summary>
-            Account Name
-            </summary>
-        </member>
-        <member name="P:VDMERLib.EasyRouter.Risk.Account.AccountCode">
-            <summary>
-            Account Code
-            </summary>
-        </member>
-        <member name="P:VDMERLib.EasyRouter.Risk.Account.Description">
-            <summary>
-            Account Description
-            </summary>
-        </member>
-        <member name="P:VDMERLib.EasyRouter.Risk.Account.Currency">
-            <summary>
-            Account Currency
-            </summary>
-        </member>
-        <member name="P:VDMERLib.EasyRouter.Risk.Account.Positions">
-            <summary>
-            Positions
-            </summary>
-        </member>
-        <member name="T:VDMERLib.Database.DataAccess.CustomAccess">
-            <summary>
-            APJ allows writing of Trade info into a db source
-            </summary>
-        </member>
-        <member name="F:VDMERLib.Database.DataAccess.CustomAccess.SP_InsertTick">
-            <summary>
-            Insert record
-            </summary>
-        </member>
-        <member name="M:VDMERLib.Database.DataAccess.CustomAccess.#ctor(System.String)">
-            <summary>
-            vanilla construtor
-            </summary>
-            <param name="sDSN"></param>
-        </member>
-        <member name="M:VDMERLib.Database.DataAccess.CustomAccess.InsertTick(System.String,System.DateTime,System.String,System.Double)">
-            <summary>
-            Insert tick data
-            </summary>
-            <param name="sUsername"></param>
-            <param name="dtTime"></param>
-            <param name="sDataName"></param>
-            <param name="dTick"></param>
-            <returns></returns>
-        </member>
-        <member name="T:VDMERLib.EasyRouter.TCP.ConnectionEventArgs">
-            <summary>
-            Class ConnectionEventArgs
-            </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.TCP.ConnectionEventArgs.m_State">
-            <summary>
-            tcp connection state
-            </summary>
-        </member>
-        <member name="M:VDMERLib.EasyRouter.TCP.ConnectionEventArgs.#ctor(VDMERLib.EasyRouter.TCP.Client.State)">
-            <summary>
-            constructor for connection event 
-            </summary>
-            <param name="state"></param>
-        </member>
-        <member name="P:VDMERLib.EasyRouter.TCP.ConnectionEventArgs.ConnectionState">
-            <summary>
-            get the current connectin state
-            </summary>
-        </member>
-        <member name="T:VDMERLib.EasyRouter.Orders.OrderHistory">
-            <summary>
-            Class OrderHistory
-            </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.Orders.OrderHistory.m_OrderHistory">
-            <summary>
-            Order History - stores a list of Trade and Order information
-            </summary>
-        </member>
-        <member name="M:VDMERLib.EasyRouter.Orders.OrderHistory.#ctor(VDMERLib.EasyRouter.Orders.OrderInfo)">
-            <summary>
-            Constructor
-            </summary>
-            <param name="firstOrder"></param>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.Orders.OrderHistory.m_CurrentOrder">
-            <summary>
-            This Order  object stores the current order state from the updated order and trade messages 
-            </summary>
-        </member>
-        <member name="M:VDMERLib.EasyRouter.Orders.OrderHistory.UpdateOrder(VDMERLib.EasyRouter.Orders.OrderInfo)">
-            <summary>
-            Update the current order with the FIX message trade or order update
-            </summary>
-            <param name="order"></param>
-        </member>
-        <member name="P:VDMERLib.EasyRouter.Orders.OrderHistory.CurrentOrder">
-            <summary>
-            Pbulic property to get the Order object that stores the current order state from the updated order and trade messages 
-            </summary>
-        </member>
-        <member name="P:VDMERLib.EasyRouter.Orders.OrderHistory.Key">
-            <summary>
-            Get the priamry boid - identifier in ER system
-            </summary>
-        </member>
-        <member name="T:VDMERLib.EasyRouter.Structure.InstrumentManager">
-            <summary>
-            Class InstrumentManager
-            </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.Structure.InstrumentManager.m_directTEMap">
-            <summary>
-            Direct ESTickerMnemonic to TEInstrument infromation
-            </summary>
-        </member>
-        <member name="M:VDMERLib.EasyRouter.Structure.InstrumentManager.AddDirectTE(VDMERLib.EasyRouter.Structure.TEInstrument)">
-            <summary>
-            Add REInstrument to Local hashtable of ESTickerMnemonic
-            </summary>
-            <param name="instrument">returns Tradable Entity Information</param>
-        </member>
-        <member name="M:VDMERLib.EasyRouter.Structure.InstrumentManager.GetDirectTE(System.String)">
-            <summary>
-            Get TEInstrument from TicketMnemonic
-            </summary>
-            <param name="sTE">TicketMnemonic</param>
-            <returns></returns>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.Structure.InstrumentManager.m_InstrumentMap">
-            <summary>
-            Map of Security  Exchanges
-            </summary>
-        </member>
-        <member name="M:VDMERLib.EasyRouter.Structure.InstrumentManager.#ctor">
-            <summary>
-            Vanilla
-            </summary>
-        </member>
-        <member name="M:VDMERLib.EasyRouter.Structure.InstrumentManager.HandleCompletionUpdate(EASYROUTERCOMCLIENTLib.IFIXMessage)">
-            <summary>
-            
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:VDMERLib.EasyRouter.Structure.InstrumentManager.GetSecurityExchange(System.String)">
-            <summary>
-            Get the security exchange if it exists
-            </summary>
-            <param name="sKey"></param>
-            <returns></returns>
-        </member>
-        <member name="M:VDMERLib.EasyRouter.Structure.InstrumentManager.HandleSecurityUpdate(EASYROUTERCOMCLIENTLib.IFIXMessage)">
-            <summary>
-            Process Security FIX Update message
-            </summary>
-            <param name="FIXMsg"></param>
-            <returns></returns>
-        </member>
-        <member name="M:VDMERLib.EasyRouter.Structure.InstrumentManager.HandleESExchangeUpdate(EASYROUTERCOMCLIENTLib.IFIXMessage)">
-            <summary>
-            Process ESExchange FIX Update message
-            </summary>
-            <param name="FIXMsg"></param>
-            <returns></returns>
-        </member>
-        <member name="M:VDMERLib.EasyRouter.Structure.InstrumentManager.HandleTEInstrumentUpdate(EASYROUTERCOMCLIENTLib.IFIXMessage)">
-            <summary>
-            Process Tradable Entity Instrument FIX Update message
-            </summary>
-            <param name="FIXMsg"></param>
-            <returns></returns>
-        </member>
-        <member name="M:VDMERLib.EasyRouter.Structure.InstrumentManager.FindByISINandExchange(System.String,System.String)">
-            <summary>
-            used to locate an equity by Exchange Reuters ID and ISIN 
-            </summary>
-            <param name="sSecurityID"></param>
-            <param name="sExchange"></param>
-            <returns></returns>
-        </member>
-        <member name="M:VDMERLib.EasyRouter.Structure.InstrumentManager.HandleCommodityUpdate(EASYROUTERCOMCLIENTLib.IFIXMessage)">
-            <summary>
-            Process Commodity FIX Update message
-            </summary>
-            <param name="FIXMsg"></param>
-            <returns></returns>
-        </member>
-        <member name="M:VDMERLib.EasyRouter.Structure.InstrumentManager.AddExchange(System.String,System.String)">
-            <summary>
-            Add Security Exchange to instrument map if does not exist
-            </summary>
-            <param name="sExchange">Security Exchange ID</param>
-            <param name="sDescription">"Security Exchange Description</param>
-            <returns>Either Creates new SecurityExchange if does not exist or retrives existing from Instruemnt Map</returns> 
-        </member>
-        <member name="M:VDMERLib.EasyRouter.Structure.InstrumentManager.GetExchange(System.String)">
-            <summary>
-            Get the security exchange 
-            </summary>
-            <param name="sExchange">Security Exchange ID</param>
-            <returns>returns SecurityExchange if exists in Instrument map else null</returns>
-        </member>
-        <member name="M:VDMERLib.EasyRouter.Structure.InstrumentManager.Subscribed(System.String,System.String)">
-            <summary>
-            HAve we subscribed at ESExchange level for the products
-            </summary>
-            <param name="sExchange">Security Exchange ID</param>
-            <param name="sESExchange">ESExchange ID</param>
-            <returns>true if we have sent subscription request</returns>
-        </member>
-        <member name="M:VDMERLib.EasyRouter.Structure.InstrumentManager.Subscribed(System.String,System.String,System.String,System.String)">
-            <summary>
-            Have we subscribed at commodity level for the products
-            </summary>
-            <param name="sExchange">Security Exchange ID</param>
-            <param name="sESExchange">ESExchange ID</param>
-            <param name="sSymbol">Symbol ID</param>
-            <param name="sSecurityType">Security Type eg "OPT" for options</param>
-            <returns>true if we have sent subscription request</returns>
-        </member>
-        <member name="M:VDMERLib.EasyRouter.Structure.InstrumentManager.SetSubscribed(System.String,System.String)">
-            <summary>
-            Set ESExchange as subscribed
-            </summary>
-            <param name="sExchange"></param>
-            <param name="sESExchange"></param>
-        </member>
-        <member name="M:VDMERLib.EasyRouter.Structure.InstrumentManager.SetSubscribed(System.String,System.String,System.String,System.String)">
-            <summary>
-            Set Commodity as subscribed
-            </summary>
-            <param name="sExchange"></param>
-            <param name="sESExchange"></param>
-            <param name="sSymbol"></param>
-            <param name="sSecurityType"></param>
-        </member>
-        <member name="P:VDMERLib.EasyRouter.Structure.InstrumentManager.Map">
-            <summary>
-            Property to access the instrument map which stores SecurityExchange
-            </summary>
-        </member>
-        <member name="T:VDMERLib.EasyRouter.Structure.Commodity">
-            <summary>
-            Class Commodity
-            </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.Structure.Commodity.m_ESExchange">
-            <summary>
-            link to the EXExchange this commodity belongs to
-            </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.Structure.Commodity.m_ESCommoditySymbolMap">
-            <summary>
-            map of commodity tye to commodity symbol
-            </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.Structure.Commodity.m_sCommodity">
-            <summary>
-            security type code
-            </summary>
-        </member>
-        <member name="M:VDMERLib.EasyRouter.Structure.Commodity.#ctor(System.String,VDMERLib.EasyRouter.Structure.ESExchange)">
-            <summary>
-            Constructor
-            </summary>
-            <param name="sCommodity"></param>
-            <param name="exchange"></param>
-        </member>
-        <member name="M:VDMERLib.EasyRouter.Structure.Commodity.AddCommoditySymbol(System.String,System.String)">
-            <summary>
-            Add commodity symbol
-            </summary>
-            <param name="sSymbol"></param>
-            <param name="sCommodityDesc"></param>
-            <returns></returns>
-        </member>
-        <member name="M:VDMERLib.EasyRouter.Structure.Commodity.GetCommoditySymbol(System.String)">
-            <summary>
-            get a commodity symbol
-            </summary>
-            <param name="sSymbol"></param>
-            <returns></returns>
-        </member>
-        <member name="M:VDMERLib.EasyRouter.Structure.Commodity.GetCommoditySymbol(System.String,System.String,System.Boolean)">
-            <summary>
-            Generic future to get and add Commodity symbol
-            </summary>
-            <param name="sSymbol"></param>
-            <param name="sCommodityDesc"></param>
-            <param name="bAdded"></param>
-            <returns></returns>
-        </member>
-        <member name="P:VDMERLib.EasyRouter.Structure.Commodity.ESExchangeObj">
-            <summary>
-            link to the EXExchange this commodity belongs to
-            </summary>
-        </member>
-        <member name="P:VDMERLib.EasyRouter.Structure.Commodity.CommodityCode">
-            <summary>
-            security type code
-            </summary>
-        </member>
-        <member name="P:VDMERLib.EasyRouter.Structure.Commodity.Map">
-            <summary>
-            Get the commodity symbol map that is associated to this commodity type
-            </summary>
-        </member>
-        <member name="T:VDMERLib.EasyRouter.EasyRouterClient.Data.ComponentStatusArgs">
-            <summary>
-            Class ComponentStatusArgs
-            </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.EasyRouterClient.Data.ComponentStatusArgs.m_sType">
-            <summary>
-            component type
-            public const string esFIXComponentCategoryOrders = "O";
-            public const string esFIXComponentCategoryPricesBest = "B";
-            public const string esFIXComponentCategoryPricesDepth = "D";
-            public const string esFIXComponentCategoryStructure = "S";
-            </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.EasyRouterClient.Data.ComponentStatusArgs.m_sExchange">
-            <summary>
-            Security Exchange code
-            </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.EasyRouterClient.Data.ComponentStatusArgs.m_sExchangeDesc">
-            <summary>
-            Security Exchange description
-            </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.EasyRouterClient.Data.ComponentStatusArgs.m_eType">
-            <summary>
-            component status Status
-            </summary>
-        </member>
-        <member name="M:VDMERLib.EasyRouter.EasyRouterClient.Data.ComponentStatusArgs.#ctor(System.String,System.String,System.String)">
-            <summary>
-            
-            </summary>
-            <param name="sType"></param>
-            <param name="sExchange"></param>
-            <param name="sExchangeDesc"></param>
-        </member>
-        <member name="M:VDMERLib.EasyRouter.EasyRouterClient.Data.ComponentStatusArgs.SetStatus(System.Int32,System.Int32,System.Int32)">
-            <summary>
-            Set the component status 
-            </summary>
-            <param name="nActive"></param>
-            <param name="nWaiting"></param>
-            <param name="nInactive"></param>
-            <returns></returns>
-        </member>
-        <member name="M:VDMERLib.EasyRouter.EasyRouterClient.Data.ComponentStatusArgs.GetStatus">
-            <summary>
-            Get the current status
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:VDMERLib.EasyRouter.EasyRouterClient.Data.ComponentStatusArgs.GetStatusAsString">
-            <summary>
-            Get status as user friendly string
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:VDMERLib.EasyRouter.EasyRouterClient.Data.ComponentStatusArgs.GetComponentAsString">
-            <summary>
-            Get component type as use friendly string
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="P:VDMERLib.EasyRouter.EasyRouterClient.Data.ComponentStatusArgs.Exchange">
-            <summary>
-            Security Exchange code
-            </summary>
-        </member>
-        <member name="P:VDMERLib.EasyRouter.EasyRouterClient.Data.ComponentStatusArgs.ExchangeDesc">
-            <summary>
-            Security Exchange description
-            </summary>
-        </member>
-        <member name="P:VDMERLib.EasyRouter.EasyRouterClient.Data.ComponentStatusArgs.ComponentType">
-            <summary>
-            component type
-            public const string esFIXComponentCategoryOrders = "O";
-            public const string esFIXComponentCategoryPricesBest = "B";
-            public const string esFIXComponentCategoryPricesDepth = "D";
-            public const string esFIXComponentCategoryStructure = "S";
-            </summary>
-        </member>
-        <member name="T:VDMERLib.EasyRouter.EasyRouterClient.Data.ComponentStatusArgs.Status">
-            <summary>
-            easyrouter component status enum
-            </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.EasyRouterClient.Data.ComponentStatusArgs.Status.eUnknown">
-            <summary>
-            unknown
-            </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.EasyRouterClient.Data.ComponentStatusArgs.Status.eActive">
-            <summary>
-            active
-            </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.EasyRouterClient.Data.ComponentStatusArgs.Status.eWaiting">
-            <summary>
-            waiting
-            </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.EasyRouterClient.Data.ComponentStatusArgs.Status.eWaitingActive">
-            <summary>
-            waiting active
-            </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.EasyRouterClient.Data.ComponentStatusArgs.Status.eInactive">
-            <summary>
-            inactive
-            </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.EasyRouterClient.Data.ComponentStatusArgs.Status.eInactiveActive">
-            <summary>
-            inactive active
-            </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.EasyRouterClient.Data.ComponentStatusArgs.Status.eInactiveWaiting">
-            <summary>
-            inactive waiting 
-            </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.EasyRouterClient.Data.ComponentStatusArgs.Status.eALL">
-            <summary>
-            all
-            </summary>
-        </member>
         <member name="P:VDMERLib.Database.SQLServer.BulkInsert.DSN">
             <summary>
             Connection String
             </summary>
-        </member>
-        <member name="T:VDMERLib.EasyRouter.TCP.Client">
-            <summary>
-            Class Client
-            </summary>
-        </member>
-        <member name="M:VDMERLib.EasyRouter.TCP.Client.#ctor(System.Int32,System.String)">
-            <summary>
-            constructor
-            </summary>
-            <param name="nPort">ip port to connect</param>
-            <param name="sIPAddress">address to connect to</param>
-        </member>
-        <member name="M:VDMERLib.EasyRouter.TCP.Client.Finalize">
-            <summary>
-            destructor
-            </summary>
-        </member>
-        <member name="M:VDMERLib.EasyRouter.TCP.Client.Start">
-            <summary>
-            Begin thread to connect
-            </summary>
-        </member>
-        <member name="M:VDMERLib.EasyRouter.TCP.Client.Connect">
-            <summary>
-            connection to tcp server
-            </summary>
-        </member>
-        <member name="M:VDMERLib.EasyRouter.TCP.Client.Stop">
-            <summary>
-            stop connection thread and tcp connection if established
-            </summary>
-        </member>
-        <member name="M:VDMERLib.EasyRouter.TCP.Client.SendFIXMsg(MESSAGEFIX3Lib.FIXMessage)">
-            <summary>
-            write data to the tcp server 
-            </summary>
-            <param name="msg"></param>
-        </member>
-        <member name="M:VDMERLib.EasyRouter.TCP.Client.SetEventFIXMessageHandler(System.Boolean)">
-            <summary>
-            set up event handler to recieve fix data from client reader tcp data stream
-            </summary>
-            <param name="bEnable"></param>
-        </member>
-        <member name="M:VDMERLib.EasyRouter.TCP.Client.EventFIXMessage(System.Object,VDMERLib.EasyRouter.TCP.FIXMessageEventArgs)">
-            <summary>
-            Event raised when FIX data mesage is recieved 
-            </summary>
-            <param name="from"></param>
-            <param name="args"></param>
-        </member>
-        <member name="M:VDMERLib.EasyRouter.TCP.Client.RecvFIXMsg(MESSAGEFIX3Lib.FIXMsgConstants,MESSAGEFIX3Lib.FIXMessage)">
-            <summary>
-            virtual function to handle incoming data
-            </summary>
-            <param name="msgType"></param>
-            <param name="msg"></param>
-        </member>
-        <member name="M:VDMERLib.EasyRouter.TCP.Client.RecvFIXDriverMsg(MESSAGEFIX3Lib.FIXMessage)">
-            <summary>
-            default implemtation to driver status message + logout from exchange orders - does nothing 
-            </summary>
-            <param name="msg"></param>
-        </member>
-        <member name="M:VDMERLib.EasyRouter.TCP.Client.RecvFIXOrderMsg(MESSAGEFIX3Lib.FIXMessage)">
-            <summary>
-            default implemtation to handle orders - does nothing 
-            </summary>
-            <param name="msg"></param>
-        </member>
-        <member name="M:VDMERLib.EasyRouter.TCP.Client.RecvFIXPriceMsg(MESSAGEFIX3Lib.FIXMessage)">
-            <summary>
-            default implemtation to handle market price data - does nothing 
-            </summary>
-            <param name="msg"></param>
-        </member>
-        <member name="M:VDMERLib.EasyRouter.TCP.Client.RecvFIXStatusMsg(MESSAGEFIX3Lib.FIXMessage)">
-            <summary>
-            default implemtation to handle market status - does nothing 
-            </summary>
-            <param name="msg"></param>
-        </member>
-        <member name="M:VDMERLib.EasyRouter.TCP.Client.Disconnect(System.IO.ErrorEventArgs)">
-            <summary>
-             disconnect event has occured from tcp layer
-            </summary>
-            <param name="e">Exception that caused the disconnect store in the ErrorEventArgs</param>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.TCP.Client.m_ConnectionThread">
-            <summary>
-            Connection thread
-            </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.TCP.Client.m_ConnectionState">
-            <summary>
-            state of connection
-            </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.TCP.Client.m_nPort">
-            <summary>
-            connection port
-            </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.TCP.Client.m_sIPAddress">
-            <summary>
-            ipaddress of server to connect to
-            </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.TCP.Client.m_Client">
-            <summary>
-            c# socket class 
-            </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.TCP.Client.m_bContinue">
-            <summary>
-            set Connection variable to true for thread loop
-            </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.TCP.Client.m_nTimeOut">
-            <summary>
-            Connection wait in millisecs 
-            </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.TCP.Client.m_NetworkStream">
-            <summary>
-            network stream to get the read and write stream
-            </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.TCP.Client.m_StreamOut">
-            <summary>
-            stream out - write msg to server
-            </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.TCP.Client.m_StreamIn">
-            <summary>
-            stream to read message from tcp server
-            </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.TCP.Client.m_Reader">
-            <summary>
-            handles incomming packets 
-            </summary>
-        </member>
-        <member name="E:VDMERLib.EasyRouter.TCP.Client.ConnectionEvent">
-            <summary>
-            connection event 
-            </summary>
-        </member>
-        <member name="P:VDMERLib.EasyRouter.TCP.Client.IP">
-            <summary>
-            IPAddress for the tcp server to connect to
-            </summary>
-        </member>
-        <member name="P:VDMERLib.EasyRouter.TCP.Client.Port">
-            <summary>
-            port used by the tcp server to connect to
-            </summary>
-        </member>
-        <member name="T:VDMERLib.EasyRouter.TCP.Client.State">
-            <summary>
-            enum representing state of the tcp connection
-            </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.TCP.Client.State.Unknown">
-            <summary>
-            unknown
-            </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.TCP.Client.State.Connecting">
-            <summary>
-            connecting
-            </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.TCP.Client.State.Connected">
-            <summary>
-            connected
-            </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.TCP.Client.State.Disconnected">
-            <summary>
-            disconnected
-            </summary>
-        </member>
-        <member name="F:VDMERLib.EasyRouter.TCP.Client.State.Disconnecting">
-            <summary>
-            disconnected
-            </summary>
-        </member>
-        <member name="T:VDMERLib.EasyRouter.TCP.Client.EventConnection">
-            <summary>
-            event delegate
-            </summary>
-            <param name="from"></param>
-            <param name="args"></param>
         </member>
         <member name="T:VDMERLib.EasyRouter.Orders.TradeLegs">
             <summary>
@@ -3056,19 +2508,567 @@
             Leg number
             </summary>
         </member>
-        <member name="T:VDMERLib.Database.Constants">
+        <member name="T:VDMERLib.EasyRouter.Structure.CommoditySymbol">
             <summary>
-            Summary description for Constants.
+            Class CommoditySymbol
             </summary>
         </member>
-        <member name="F:VDMERLib.Database.Constants.VDM_DSN">
+        <member name="F:VDMERLib.EasyRouter.Structure.CommoditySymbol.m_Commodity">
             <summary>
-            in development 
+            Commodity linked to this obejct
             </summary>
         </member>
-        <member name="M:VDMERLib.Database.Constants.#ctor">
+        <member name="F:VDMERLib.EasyRouter.Structure.CommoditySymbol.m_ESTEMap">
             <summary>
-            in development 
+            maps commodity symbol to all TE entity for this security type
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.Structure.CommoditySymbol.m_sSymbol">
+            <summary>
+            Commodity Symbol
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.Structure.CommoditySymbol.m_sCommodityDesc">
+            <summary>
+            Commodity Symbol Desc
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.Structure.CommoditySymbol.m_bSubscribed">
+            <summary>
+            Is subscribed
+            </summary>
+        </member>
+        <member name="M:VDMERLib.EasyRouter.Structure.CommoditySymbol.#ctor(System.String,System.String,VDMERLib.EasyRouter.Structure.Commodity)">
+            <summary>
+            constructor
+            </summary>
+            <param name="sSymbol"></param>
+            <param name="sCommodityDesc"></param>
+            <param name="commodity"></param>
+        </member>
+        <member name="M:VDMERLib.EasyRouter.Structure.CommoditySymbol.GetTEInstrument(System.String)">
+            <summary>
+            get TE instrument
+            </summary>
+            <param name="sSymbol"></param>
+            <returns></returns>
+        </member>
+        <member name="M:VDMERLib.EasyRouter.Structure.CommoditySymbol.AddTEInstrument(System.String,EASYROUTERCOMCLIENTLib.IFIXMessage)">
+            <summary>
+             Add new TE if it does not exsit
+            </summary>
+            <param name="sESTickerMnemonic"></param>
+            <param name="FIXMsg"></param>
+            <returns></returns>
+        </member>
+        <member name="M:VDMERLib.EasyRouter.Structure.CommoditySymbol.ToString">
+            <summary>
+            To string
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:VDMERLib.EasyRouter.Structure.CommoditySymbol.CommodityObj">
+            <summary>
+            Get Commodity linked to this obejct
+            </summary>
+        </member>
+        <member name="P:VDMERLib.EasyRouter.Structure.CommoditySymbol.CommoditySymbolCode">
+            <summary>
+            Commodity symbol
+            </summary>
+        </member>
+        <member name="P:VDMERLib.EasyRouter.Structure.CommoditySymbol.CommodityDesc">
+            <summary>
+            Commodity symbol
+            </summary>
+        </member>
+        <member name="P:VDMERLib.EasyRouter.Structure.CommoditySymbol.Subscribed">
+            <summary>
+            Accssor for subscription
+            </summary>
+        </member>
+        <member name="P:VDMERLib.EasyRouter.Structure.CommoditySymbol.Map">
+            <summary>
+            Get the TE map
+            </summary>
+        </member>
+        <member name="P:VDMERLib.EasyRouter.Structure.CommoditySymbol.Exchange">
+            <summary>
+            security exchange for the esexchange
+            </summary>
+        </member>
+        <member name="P:VDMERLib.EasyRouter.Structure.CommoditySymbol.ESExchange">
+            <summary>
+            security exchange for the esexchange
+            </summary>
+        </member>
+        <member name="T:VDMERLib.EasyRouter.User.TickerDefaults">
+            <summary>
+            Class TickerDefaults
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.User.TickerDefaults.m_sExchange">
+            <summary>
+            Security Exchange code
+            </summary>
+        </member>
+        <member name="M:VDMERLib.EasyRouter.User.TickerDefaults.#ctor(System.String)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="sExchange"></param>
+        </member>
+        <member name="M:VDMERLib.EasyRouter.User.TickerDefaults.AddDefaults(MESSAGEFIX3Lib.IFIXGroup)">
+            <summary>
+            Retrieve ticker information from FIX message
+            </summary>
+            <param name="group"></param>
+        </member>
+        <member name="M:VDMERLib.EasyRouter.User.TickerDefaults.ApplyTickerDefaults(MESSAGEFIX3Lib.FIXMessage)">
+            <summary>
+            Apply ticker info to order ticket fix message
+            </summary>
+            <param name="message"></param>
+        </member>
+        <member name="M:VDMERLib.EasyRouter.User.TickerDefaults.ApplyTickerDefaults(MESSAGEFIX3Lib.FIXMessage,System.Collections.Hashtable)">
+            <summary>
+            Add Custom Ticker Defaults Tag
+            </summary>
+            <param name="message"></param>
+            <param name="map"></param>
+        </member>
+        <member name="P:VDMERLib.EasyRouter.User.TickerDefaults.Exchange">
+            <summary>
+            Security Exchange code
+            </summary>
+        </member>
+        <member name="T:VDMERLib.EasyRouter.TCP.ClientReader">
+            <summary>
+            Class ClientReader
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.TCP.ClientReader.m_bContinue">
+            <summary>
+            true for thread loop
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.TCP.ClientReader.m_StreamIn">
+            <summary>
+            data input stream
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.TCP.ClientReader.m_ReaderThread">
+            <summary>
+            Reader thread for data from tcp server 
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.TCP.ClientReader.m_sDelimiter">
+            <summary>
+            SOH character used to parse FIX string 
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.TCP.ClientReader.m_sTCPBuffer">
+            <summary>
+            DataReader
+            </summary>
+        </member>
+        <member name="M:VDMERLib.EasyRouter.TCP.ClientReader.#ctor(System.IO.StreamReader)">
+            <summary>
+            vanilla constuctor - take in the read stream from TCP server
+            </summary>
+            <param name="streamIn"></param>
+        </member>
+        <member name="M:VDMERLib.EasyRouter.TCP.ClientReader.ReadStream">
+            <summary>
+            Function to process data off the tcp stream - called from the worker thread
+            </summary>
+        </member>
+        <member name="M:VDMERLib.EasyRouter.TCP.ClientReader.Start">
+            <summary>
+            Start the reading thread - process data off tcp strem in
+            </summary>
+        </member>
+        <member name="M:VDMERLib.EasyRouter.TCP.ClientReader.Stop">
+            <summary>
+            Stop the worker thread , processing the tcp server data 
+            </summary>
+        </member>
+        <member name="E:VDMERLib.EasyRouter.TCP.ClientReader.DataEvent">
+            <summary>
+            connection event 
+            </summary>
+        </member>
+        <member name="E:VDMERLib.EasyRouter.TCP.ClientReader.DisconnectEvent">
+            <summary>
+            connection event 
+            </summary>
+        </member>
+        <member name="P:VDMERLib.EasyRouter.TCP.ClientReader.Delimiter">
+            <summary>
+            Returns the SOH delimiter for fix message
+            </summary>
+        </member>
+        <member name="T:VDMERLib.EasyRouter.TCP.ClientReader.EventFIXMessage">
+            <summary>
+            event delegate
+            </summary>
+            <param name="from"></param>
+            <param name="args"></param>
+        </member>
+        <member name="T:VDMERLib.EasyRouter.TCP.ClientReader.EventDisconnectMessage">
+            <summary>
+            event delegate
+            </summary>
+            <param name="args"></param>
+        </member>
+        <member name="T:VDMERLib.EasyRouter.Structure.StructureDataType">
+            <summary>
+            Class StructureDataType
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.Structure.StructureDataType.Unknown">
+            <summary>
+            unknown
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.Structure.StructureDataType.Commodity">
+            <summary>
+            Commodity
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.Structure.StructureDataType.SecurityExchange">
+            <summary>
+            security exchange
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.Structure.StructureDataType.TEInstrument">
+            <summary>
+            teinstrument
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.Structure.StructureDataType.ESExchange">
+            <summary>
+            esexchange
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.Structure.StructureDataType.EndOfResponses">
+            <summary>
+            end of security responses
+            </summary>
+        </member>
+        <member name="T:VDMERLib.EasyRouter.Structure.ESExchange">
+            <summary>
+            Class ESExchange
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.Structure.ESExchange.m_Exchange">
+            <summary>
+            Link to security exchange this belongs to
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.Structure.ESExchange.m_ESCommodityMap">
+            <summary>
+            add all commodity to this ESExchange
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.Structure.ESExchange.m_ESExchange">
+            <summary>
+            ES Exchange code 
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.Structure.ESExchange.m_sESExchangeDesc">
+            <summary>
+            ES Exchange Description
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.Structure.ESExchange.m_bSubscribed">
+            <summary>
+            Have we subscribed 
+            </summary>
+        </member>
+        <member name="M:VDMERLib.EasyRouter.Structure.ESExchange.#ctor(System.String,System.String,VDMERLib.EasyRouter.Structure.SecurityExchange)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="sESExchange"></param>
+            <param name="sExchangeDesc"></param>
+            <param name="exchange"></param>
+        </member>
+        <member name="M:VDMERLib.EasyRouter.Structure.ESExchange.AddCommodity(System.String,System.String,System.String)">
+            <summary>
+            add new commodity + commodity symbol to this esexchange
+            </summary>
+            <param name="sCommodity"></param>
+            <param name="sSymbol"></param>
+            <param name="sDesc"></param>
+            <returns></returns>
+        </member>
+        <member name="M:VDMERLib.EasyRouter.Structure.ESExchange.GetCommodity(System.String)">
+            <summary>
+            Find the commodity if exists and return
+            </summary>
+            <param name="sCommdity"></param>
+            <returns></returns>
+        </member>
+        <member name="P:VDMERLib.EasyRouter.Structure.ESExchange.SecurityExchangeObj">
+            <summary>
+            Link to security exchange this belongs to
+            </summary>
+        </member>
+        <member name="P:VDMERLib.EasyRouter.Structure.ESExchange.ESExchangeCode">
+            <summary>
+            ES Exchange code
+            </summary>
+        </member>
+        <member name="P:VDMERLib.EasyRouter.Structure.ESExchange.ESExchangeDesc">
+            <summary>
+            ES Exchange Description
+            </summary>
+        </member>
+        <member name="P:VDMERLib.EasyRouter.Structure.ESExchange.Subscribed">
+            <summary>
+            Get and set to see if we have subscribed for this ESexchange
+            </summary>
+        </member>
+        <member name="P:VDMERLib.EasyRouter.Structure.ESExchange.Map">
+            <summary>
+            list of all commodity security types for this esexchange
+            </summary>
+        </member>
+        <member name="P:VDMERLib.EasyRouter.Structure.ESExchange.Exchange">
+            <summary>
+            security exchange for the esexchange
+            </summary>
+        </member>
+        <member name="T:VDMERLib.EasyRouter.Prices.SecurityStatus">
+            <summary>
+            Class SecurityStatus
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.Prices.SecurityStatus.m_status">
+            <summary>
+            List of market modes 
+            </summary>
+        </member>
+        <member name="M:VDMERLib.EasyRouter.Prices.SecurityStatus.#ctor">
+            <summary>
+            Vanilla
+            </summary>
+        </member>
+        <member name="M:VDMERLib.EasyRouter.Prices.SecurityStatus.DecodeFIX(EASYROUTERCOMCLIENTLib.IFIXMessage)">
+            <summary>
+            Get Market mode from FIX Message
+            </summary>
+            <param name="FIXMsg"></param>
+            <returns></returns>
+        </member>
+        <member name="M:VDMERLib.EasyRouter.Prices.SecurityStatus.ModeToString">
+            <summary>
+            list of all market modes in use friendly format
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:VDMERLib.EasyRouter.Prices.SecurityStatus.ModeToString(System.String)">
+            <summary>
+            list of all market modes in use friendly format
+            </summary>
+            <param name="sData"></param>
+            <returns></returns>
+        </member>
+        <member name="M:VDMERLib.EasyRouter.Prices.SecurityStatus.ToString">
+            <summary>
+            list of all market modes in use friendly format
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:VDMERLib.EasyRouter.Prices.SecurityStatus.GetMode(MESSAGEFIX3Lib.FIXSecurityTradingStatusConstants)">
+            <summary>
+            Get user friendly market mode description from market mode code
+            </summary>
+            <param name="constant"></param>
+            <returns></returns>
+        </member>
+        <member name="P:VDMERLib.EasyRouter.Prices.SecurityStatus.Status">
+            <summary>
+            Returns the arraylist of market modes for this instrument
+            </summary>
+        </member>
+        <member name="T:VDMERLib.EasyRouter.Prices.TradeData">
+            <summary>
+            Class TradeData
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.Prices.TradeData.m_eAskOrderType">
+            <summary>
+            Ask Price Type
+            </summary>
+            
+        </member>
+        <member name="F:VDMERLib.EasyRouter.Prices.TradeData.m_eBidOrderType">
+            <summary>
+            Bid Price Type
+            </summary>
+            
+        </member>
+        <member name="F:VDMERLib.EasyRouter.Prices.TradeData.m_Bid">
+            <summary>
+            bid
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.Prices.TradeData.m_Ask">
+            <summary>
+            ask
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.Prices.TradeData.m_Trade">
+            <summary>
+            Trade
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.Prices.TradeData.m_dClose">
+            <summary>
+            Close
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.Prices.TradeData.m_dSettlement">
+            <summary>
+            Settlement
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.Prices.TradeData.m_sSettlementTime">
+            <summary>
+            Settlement time
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.Prices.TradeData.m_sSettlementDate">
+            <summary>
+            Settlement date
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.Prices.TradeData.m_dPrevSettlement">
+            <summary>
+            Prev Settlement
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.Prices.TradeData.m_sPrevSettlementTime">
+            <summary>
+            Prev Settlement time
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.Prices.TradeData.m_sPrevSettlementDate">
+            <summary>
+            Prev Settlement date
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.Prices.TradeData.m_nTotalTradeVolume">
+            <summary>
+            Total traded volume
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.Prices.TradeData.m_bSnapshot">
+            <summary>
+            Indicates if is a snapshot
+            </summary>
+        </member>
+        <member name="M:VDMERLib.EasyRouter.Prices.TradeData.#ctor">
+            <summary>
+            Vanilla
+            </summary>
+        </member>
+        <member name="M:VDMERLib.EasyRouter.Prices.TradeData.DecodeFIX(EASYROUTERCOMCLIENTLib.IFIXMessage,System.Boolean)">
+            <summary>
+            Decode price FIX message
+            </summary>
+            <param name="FIXMsg"></param>
+            <param name="bSnapFull"></param>
+            <returns></returns>
+        </member>
+        <member name="P:VDMERLib.EasyRouter.Prices.TradeData.Close">
+            <summary>
+            Close
+            </summary>
+        </member>
+        <member name="P:VDMERLib.EasyRouter.Prices.TradeData.Settlement">
+            <summary>
+            Settlement
+            </summary>
+        </member>
+        <member name="P:VDMERLib.EasyRouter.Prices.TradeData.SettlementTime">
+            <summary>
+            Settlement time
+            </summary>
+        </member>
+        <member name="P:VDMERLib.EasyRouter.Prices.TradeData.SettlementDate">
+            <summary>
+            Settlement date
+            </summary>
+        </member>
+        <member name="P:VDMERLib.EasyRouter.Prices.TradeData.PrevSettlement">
+            <summary>
+            Prev Settlement
+            </summary>
+        </member>
+        <member name="P:VDMERLib.EasyRouter.Prices.TradeData.PrevSettlementTime">
+            <summary>
+            Prev Settlement time
+            </summary>
+        </member>
+        <member name="P:VDMERLib.EasyRouter.Prices.TradeData.PrevSettlementDate">
+            <summary>
+            Prev Settlement date
+            </summary>
+        </member>
+        <member name="P:VDMERLib.EasyRouter.Prices.TradeData.TotalTradeVolume">
+            <summary>
+            Total traded volume
+            </summary>
+        </member>
+        <member name="P:VDMERLib.EasyRouter.Prices.TradeData.SnapShot">
+            <summary>
+            public Property to get snapshot
+            </summary>
+        </member>
+        <member name="T:VDMERLib.EasyRouter.Prices.TradeData.Implied">
+            <summary>
+            Price Type (Implied or Actual)
+            </summary>
+            
+        </member>
+        <member name="T:VDMERLib.EasyRouter.User.ESUser">
+            <summary>
+            Class ESUser
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.User.ESUser.m_sUserName">
+            <summary>
+            ER client username
+            </summary>
+        </member>
+        <member name="F:VDMERLib.EasyRouter.User.ESUser.m_sPassword">
+            <summary>
+            ER cleint Pwd
+            </summary>
+        </member>
+        <member name="M:VDMERLib.EasyRouter.User.ESUser.#ctor">
+            <summary>
+            Vanilla
+            </summary>
+        </member>
+        <member name="M:VDMERLib.EasyRouter.User.ESUser.#ctor(System.String,System.String)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="sPassword"></param>
+            <param name="sUserName"></param>
+        </member>
+        <member name="P:VDMERLib.EasyRouter.User.ESUser.Username">
+            <summary>
+            Username
+            </summary>
+        </member>
+        <member name="P:VDMERLib.EasyRouter.User.ESUser.Password">
+            <summary>
+            Password
             </summary>
         </member>
     </members>

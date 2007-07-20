@@ -50,7 +50,10 @@ namespace VDMERLib.EasyRouter.Structure
         /// <summary>
         /// Exchange Description
         /// </summary>
-        public string ExchangeDesc { get { return m_sExchangeDesc; } }
+        public string ExchangeDesc { 
+            get { return m_sExchangeDesc; }
+            set { m_sExchangeDesc = value; }
+        }
 
         /// <summary>
         /// Constructor
@@ -75,8 +78,13 @@ namespace VDMERLib.EasyRouter.Structure
             ESExchange exchange = null;
             if (!m_ESExchangeMap.ContainsKey(sESExchange))
             {
-                exchange = new ESExchange(sESExchange, sESExchangeDescription,this);
+                exchange = new ESExchange(sESExchange, sESExchangeDescription, this);
                 m_ESExchangeMap[sESExchange] = exchange;
+            }
+            else
+            {
+                exchange = (ESExchange)m_ESExchangeMap[sESExchange];
+                exchange.ESExchangeDesc = sESExchangeDescription;
             }
             return exchange;
         }
@@ -92,6 +100,12 @@ namespace VDMERLib.EasyRouter.Structure
             if (m_ESExchangeMap.ContainsKey(sESExchange))
             {
                 exchange = (ESExchange)m_ESExchangeMap[sESExchange];
+            }
+            else
+            {
+                //create dummy
+                exchange = new ESExchange(sESExchange, sESExchange, this);
+                m_ESExchangeMap[sESExchange] = exchange;
             }
             return exchange;
         }
