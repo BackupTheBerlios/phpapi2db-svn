@@ -29,7 +29,6 @@ namespace RoltorForm
                 this.buttonRTDStart.Enabled = true;
                 this.buttonRTDClose.Enabled = true;
                 string sTemp = "CONNECT " + DateTime.Now.ToString();
-                label1.Text = sTemp;
                 System.Diagnostics.Debug.WriteLine(sTemp);
             }
         }
@@ -41,7 +40,6 @@ namespace RoltorForm
                 this.buttonRTDStart.Enabled = false;
                 this.buttonRTDStop.Enabled = true;
                 string sTemp = "START " + DateTime.Now.ToString();
-                label1.Text = sTemp;
                 System.Diagnostics.Debug.WriteLine(sTemp);
             }
         }
@@ -53,7 +51,6 @@ namespace RoltorForm
                 this.buttonRTDStart.Enabled = true;
                 this.buttonRTDStop.Enabled = false;
                 string sTemp = "STOP " + DateTime.Now.ToString();
-                label1.Text = sTemp;
                 System.Diagnostics.Debug.WriteLine(sTemp);
             }
         }
@@ -70,7 +67,6 @@ namespace RoltorForm
                 this.buttonRTDStop.Enabled = false;
                 this.buttonRTDClose.Enabled = false;
                 string sTemp = "CLOSE " + DateTime.Now.ToString();
-                label1.Text = sTemp;
                 System.Diagnostics.Debug.WriteLine(sTemp);
             }
         }

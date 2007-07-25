@@ -16,39 +16,30 @@ namespace RoltorLib
         private Roltor myRoltor;
 
         private TcpClient rtdConn = null;
+        public bool IsConnected { get { return rtdConn.Connected; } }
+
         private Thread readThread;
         private bool bContinue = false;
 
-        private Dictionary<int, int> arrContractIDs = new Dictionary<int, int>(11);
-        private Dictionary<int, string> arrAccountTexts = new Dictionary<int, string>(4);
-        private Dictionary<int, int> arrExchangeIDs = new Dictionary<int, int>();
-            
+
+        private Dictionary<int, string> dicAccountTexts = new Dictionary<int, string>();
+        private Dictionary<int, int> dicExchangeIDs = new Dictionary<int, int>();
+
 
         public RoltorRTDtcp(Roltor myRoltor)
         {
             this.myRoltor = myRoltor;
-            
-            arrContractIDs[0] = 1146465;
-            arrContractIDs[1] = 23049;
-            arrContractIDs[2] = 773634;
-            arrContractIDs[3] = 5340;
-            arrContractIDs[4] = 5282;
-            arrContractIDs[5] = 35;
-            arrContractIDs[6] = 317271;
-            arrContractIDs[7] = 145566;
-            arrContractIDs[8] = 57;
-            arrContractIDs[9] = 418241;
-            arrContractIDs[10] = 1021863;
 
-            arrAccountTexts[0] = "VME04";
-            arrAccountTexts[1] = "VME08";
-            arrAccountTexts[2] = "VME11";
-            arrAccountTexts[3] = "VME13";
-            arrAccountTexts[4] = "VME17";
-            arrAccountTexts[5] = "VME20";
+            //dicAccountTexts[0] = "VME04";
+            dicAccountTexts[1] = "VME08";
+            //dicAccountTexts[2] = "VME11";
+            //dicAccountTexts[3] = "VME13";
+            //dicAccountTexts[4] = "VME17";
+            //dicAccountTexts[5] = "VME20";
 
-            arrExchangeIDs[0] = 570;
+            dicExchangeIDs[0] = 570;
         }
+
 
         public void ConnectRTDapi()
         {
@@ -126,8 +117,6 @@ namespace RoltorLib
                     string sTemp = string.Format("44{0}273{0}0{0}15{0}002{0}105{0}1", '\x1F');
                     System.Diagnostics.Debug.WriteLine(sTemp);
                     streamOut.WriteLine(sTemp);
-                    // RID: EXCHANGE REQ LOAD ALL
-                    //string sTemp = string.Format("10{0}15{0}0{0}105{0}1", '\x1F');
                     streamOut.Flush();
                 }
                 catch (Exception err)
@@ -160,7 +149,7 @@ namespace RoltorLib
         /*
          * Send RTD and order change
          */
-        public void ChangeOrder(int iRTDOrderId, float fPrice, int iQtyTotal, int iQtyOpen)
+        public void ChangeOrder(int iRTDOrderId, double fPrice, int iQtyTotal, int iQtyOpen)
         {
             if (rtdConn.Connected)
             {
@@ -303,52 +292,83 @@ If booking price, fees, provision, courtage are not 0 the corresponding currency
                     strMessage = strMessage.Substring(strMessage.IndexOf('\x1F') + 1);
                     arrMessage = strMessage.Split('\x1F');
 
-                    // Lets loop over a bunch of time to get the shit we need
+                    // Lets loop over a bunch of times to get the shit we need
 
                     // fid_order_id
                     for (int y = 0; y < arrMessage.Length; y++)
                         if (arrMessage[y] == "167")
+                        {
                             order.OrderID = int.Parse(arrMessage[++y]);
+                            break;
+                        }
                     // fid_contract_id
                     for (int y = 0; y < arrMessage.Length; y++)
                         if (arrMessage[y] == "17")
+                        {
                             order.ContractID = int.Parse(arrMessage[++y]);
+                            break;
+                        }
                     // fid_currency_id
                     for (int y = 0; y < arrMessage.Length; y++)
                         if (arrMessage[y] == "30")
+                        {
                             order.Text = arrMessage[++y];
+                            break;
+                        }
                     // fid_exchange_id
                     for (int y = 0; y < arrMessage.Length; y++)
                         if (arrMessage[y] == "47")
+                        {
                             order.ExchangeID = int.Parse(arrMessage[++y]);
+                            break;
+                        }
                     // fid_state
                     for (int y = 0; y < arrMessage.Length; y++)
                         if (arrMessage[y] == "202")
+                        {
                             order.State = int.Parse(arrMessage[++y]);
+                            break;
+                        }
                     // fid_order_bid
                     for (int y = 0; y < arrMessage.Length; y++)
                         if (arrMessage[y] == "150")
+                        {
                             order.IsBid = arrMessage[++y] == "1" ? true : false;
+                            break;
+                        }
                     // fid_total_qty
                     for (int y = 0; y < arrMessage.Length; y++)
                         if (arrMessage[y] == "170")
+                        {
                             order.Qty = int.Parse(arrMessage[++y]);
+                            break;
+                        }
                     // fid_open_qty
                     for (int y = 0; y < arrMessage.Length; y++)
                         if (arrMessage[y] == "149")
+                        {
                             order.QtyOpen = int.Parse(arrMessage[++y]);
+                            break;
+                        }
                     // fid_price
                     for (int y = 0; y < arrMessage.Length; y++)
                         if (arrMessage[y] == "76")
-                            order.Price = float.Parse(arrMessage[++y]);
+                        {
+                            // Prices in RTD are GBP, prices in VOLT are GPX (pence)
+                            order.Price = double.Parse(arrMessage[++y]) * 100;
+                            break;
+                        }
                     // fid_text
                     for (int y = 0; y < arrMessage.Length; y++)
                         if (arrMessage[y] == "203")
+                        {
                             order.Text = arrMessage[++y];
+                            break;
+                        }
 
                     if (BadHackFilter(order))
                     {
-                        //System.Diagnostics.Debug.WriteLine("Order " + order.OrderID + " found,ACC=" + order.Text + ",CTR=" + order.ContractID);
+                        System.Diagnostics.Debug.WriteLine("Order " + order.OrderID + " found,ACC=" + order.Text + ",CTR=" + order.ContractID);
                         myRoltor.IncomingRTDOrderEvent(order.OrderID, order);
                     }
 
@@ -366,10 +386,12 @@ If booking price, fees, provision, courtage are not 0 the corresponding currency
         {
             bool bIsGood = false;
 
-            if (arrAccountTexts.ContainsValue(order.Text) 
-                && arrContractIDs.ContainsValue(order.ContractID)
-                && arrExchangeIDs.ContainsValue(order.ExchangeID))
+            if (dicAccountTexts.ContainsValue(order.Text)
+                && dicExchangeIDs.ContainsValue(order.ExchangeID)
+                && myRoltor.dicContractMap.ContainsKey(order.ContractID))
+            {
                 bIsGood = true;
+            }
 
             return bIsGood;
         }

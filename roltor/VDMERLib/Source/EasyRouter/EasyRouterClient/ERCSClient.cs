@@ -413,14 +413,14 @@ namespace VDMERLib.EasyRouter.EasyRouterClient
             switch (type)
             {
                 case EASYROUTERCOMCLIENTLib.FIXMsgConstants.esFIXMsgESAccount:
-                    System.Diagnostics.Debug.WriteLine(EASYROUTERCOMCLIENTLib.FIXMsgConstants.esFIXMsgESAccount.ToString());
+                    //System.Diagnostics.Debug.WriteLine(EASYROUTERCOMCLIENTLib.FIXMsgConstants.esFIXMsgESAccount.ToString());
                     //m_ERUser.ProcessAccount(FIXMsg);
                     m_AccountManagement.DecodeFIX((MESSAGEFIX3Lib.IFIXMessage)FIXMsg);
 
                     break;
                 case EASYROUTERCOMCLIENTLib.FIXMsgConstants.esFIXMsgOrderCancelReject:
                     {
-                        System.Diagnostics.Debug.WriteLine(EASYROUTERCOMCLIENTLib.FIXMsgConstants.esFIXMsgOrderCancelReject.ToString());
+                        //System.Diagnostics.Debug.WriteLine(EASYROUTERCOMCLIENTLib.FIXMsgConstants.esFIXMsgOrderCancelReject.ToString());
                         OrderInfo order = m_OrderManagement.ProcessOrderCancelReject(FIXMsg);
 
                         if (order != null && RecvOrderMsgEvent != null)
@@ -430,7 +430,7 @@ namespace VDMERLib.EasyRouter.EasyRouterClient
                     }
                 case EASYROUTERCOMCLIENTLib.FIXMsgConstants.esFIXMsgExecutionReport:
                     {
-                        System.Diagnostics.Debug.WriteLine(EASYROUTERCOMCLIENTLib.FIXMsgConstants.esFIXMsgExecutionReport.ToString());
+                        //System.Diagnostics.Debug.WriteLine(EASYROUTERCOMCLIENTLib.FIXMsgConstants.esFIXMsgExecutionReport.ToString());
                         OrderInfo order = m_OrderManagement.ProcessExecutionReport(FIXMsg);
 
                         if (order != null && RecvOrderMsgEvent != null)
@@ -440,7 +440,7 @@ namespace VDMERLib.EasyRouter.EasyRouterClient
                     }
                 case EASYROUTERCOMCLIENTLib.FIXMsgConstants.esFIXMsgESRiskAccount:
                     {
-                        System.Diagnostics.Debug.WriteLine(EASYROUTERCOMCLIENTLib.FIXMsgConstants.esFIXMsgESRiskAccount.ToString());
+                        //System.Diagnostics.Debug.WriteLine(EASYROUTERCOMCLIENTLib.FIXMsgConstants.esFIXMsgESRiskAccount.ToString());
                         m_AccountManagement.DecodeFIX((MESSAGEFIX3Lib.IFIXMessage)FIXMsg);
                         if (RecvRiskMsgEvent != null)
                         {
@@ -467,7 +467,7 @@ namespace VDMERLib.EasyRouter.EasyRouterClient
                     }
                 case EASYROUTERCOMCLIENTLib.FIXMsgConstants.esFIXMsgESPosition:
                     {
-                        System.Diagnostics.Debug.WriteLine(EASYROUTERCOMCLIENTLib.FIXMsgConstants.esFIXMsgESPosition.ToString());
+                        //System.Diagnostics.Debug.WriteLine(EASYROUTERCOMCLIENTLib.FIXMsgConstants.esFIXMsgESPosition.ToString());
                         m_AccountManagement.DecodeFIX((MESSAGEFIX3Lib.IFIXMessage)FIXMsg);
                         if (RecvRiskMsgEvent != null)
                         {
